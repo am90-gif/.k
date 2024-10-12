@@ -8,7 +8,7 @@ local Window = redzlib:MakeWindow({
 
 local AFKOptions = {}
 
-repeat wait() until game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework")
+repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer  
 local ScreenGui = Instance.new("ScreenGui")
 local Fps = Instance.new("TextLabel")
 local Ping = Instance.new("TextLabel")
@@ -1898,7 +1898,8 @@ local function AutoFarmMastery()
     
     if not QuestVisible() and not VerifyQuest(Quest[3]) then
       StartQuest(Quest[3], Quest[4], Quest[1])
-    elseif Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
+      end
+    if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
       local Health = Enemie and Enemie:FindFirstChild("Humanoid") and Enemie.Humanoid.Health
       if Health and Health < Enemie.Humanoid.MaxHealth * SkillHealth / 100 then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + Vector3.new(0, getgenv().FarmDistance, 0))
