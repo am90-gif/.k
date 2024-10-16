@@ -4097,7 +4097,7 @@ local Agradecimentos = Inicio:AddSection({Name = "OMG Hub"})
 local DiscordLink = Inicio:AddDiscordInvite({
 	Name = "Discord Link",
 	Logo = "",
-	Invite = "https://discord.gg/TAAfRBGVeg"
+	Invite = "https://discord.gg/TdStSqtM8p"
 })
 local MainFarm = Window:MakeTab({"Farm", "Home"})
 if Sea3 then
