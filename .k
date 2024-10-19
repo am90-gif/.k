@@ -8930,7 +8930,7 @@ Misc:AddToggle({"Auto Haki", true, function(Value)
 end, "Misc/AutoHaki"})
 Misc:AddToggle({
 	Name = "Auto Ken",
-	Default = true,
+	Default = false,
 	Callback = function(Value)
 		getgenv().EnableKen = Value
 	end
