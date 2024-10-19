@@ -1,13 +1,3 @@
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MythicLib"))()
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/MythicRBX/MythicLib/main/Addons/Fluent.lua"))()
-local Window = redzlib:MakeWindow({
-  Title = "OMG Hub | Blox Fruit",
-  SubTitle = "By Omg",
-  SaveFolder = "redz Hub | Blox Fruits.lua"
-})
-
-local AFKOptions = {}
-
 repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer  
 local ScreenGui = Instance.new("ScreenGui")
 local Fps = Instance.new("TextLabel")
@@ -4089,6 +4079,16 @@ local function AutoRengoku()
   end
 end
 
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MythicLib"))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/MythicRBX/MythicLib/main/Addons/Fluent.lua"))()
+local Window = redzlib:MakeWindow({
+  Title = "OMG Hub | Blox Fruit",
+  SubTitle = "By Omg",
+  SaveFolder = "redz Hub | Blox Fruits.lua"
+})
+
+local AFKOptions = {}
+
 local Inicio = Window:MakeTab({Title = "Home", Icon = "home"})
 local Agradecimentos = Inicio:AddSection({Name = "Thanks"})
 local Mensagem = Inicio:AddParagraph({Title = "Message", Text = "Make With ❤️"})
@@ -4099,9 +4099,12 @@ local DiscordLink = Inicio:AddDiscordInvite({
 	Logo = "",
 	Invite = "https://discord.gg/TdStSqtM8p"
 })
-local MainFarm = Window:MakeTab({"Farm", "Home"})
-if Sea3 then
-  local AutoSea = Window:MakeTab({"Sea", "Waves"})
+local MainFarm = Window:MakeTab({"Farm", "bug"})
+local AutoSea = Window:MakeTab({"Sea", "Waves"})
+if Sea1 or Sea2 then
+AutoSea:AddSection({"Only In Sea 3"})
+end
+  if Sea3 then
   AutoSea:AddSection({"Kitsune"})
   local KILabel = AutoSea:AddParagraph({"Kitsune Island : Not Spawned"})
   local FullMoon = AutoSea:AddParagraph({""})
@@ -4144,7 +4147,7 @@ spawn(function()
 AutoSea:AddSlider({
 	Name = "Set To Trade Azure Ember",
 	Min = 0,
-	Max = 30,
+	Max = 25,
 	Increase = 1,
 	Default = 20,
 	Flag = "Nahtradea26SafemqaaRaid6",
@@ -4978,7 +4981,7 @@ spawn(function()
 
 pcall(function()
 
-while wait(0.1) do
+while wait() do
 
 if getgenv().GetGear then
 
@@ -4986,11 +4989,9 @@ pcall(function()
 
 
 if game:GetService("Workspace").Map:FindFirstChild("MysticIsland") then
-						for i, v in pairs(game:GetService("Workspace").Map.MysticIsland:GetChildren()) do
-							if v:IsA("MeshPart") then
-								if v.Material == Enum.Material.Neon then
+						for i, v in pairs(game.workspace.Map.MysticIsland:GetChildren()) do
+            if v:IsA("MeshPart") and v.MeshId == "rbxassetid://10153114969" then --and not v.CanCollide then
 									PlayerTP(v.CFrame)
-									end
 									end
 									end
 									end
@@ -8929,7 +8930,7 @@ Misc:AddToggle({"Auto Haki", true, function(Value)
 end, "Misc/AutoHaki"})
 Misc:AddToggle({
 	Name = "Auto Ken",
-	Default = false,
+	Default = true,
 	Callback = function(Value)
 		getgenv().EnableKen = Value
 	end
