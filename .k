@@ -150,7 +150,9 @@ task.spawn(function()
       or getgenv().Aren
       or getgenv().EvoV3
       or getgenv().AutoGhoulRace
-      or getgenv().UpAutoObservation then
+      or getgenv().UpAutoObservation
+      or getgenv().TalkStone
+      or getgenv().DoorRace then
         getgenv().OnFarm = true
       else
         getgenv().OnFarm = false
@@ -892,7 +894,7 @@ coroutine.wrap(function()
   AttackPlayers()
   if getgenv().FastAttackMethod == "Normal" then
   if tick() - cooldownfastattack > .9 then wait(.1) cooldownfastattack = tick() end
-  elseif getgenv().FastAttackMethod == "Fast" then
+  elseif getgenv().FastAttackMethod == "Fast (Risk)" then
   if tick() - cooldownfastattack > 1.5 then wait(.01) cooldownfastattack = tick() end
   elseif getgenv().FastAttackMethod == "Slow" then
   if tick() - cooldownfastattack > .3 then wait(.7) cooldownfastattack = tick() end
@@ -4099,7 +4101,7 @@ local DiscordLink = Inicio:AddDiscordInvite({
 	Logo = "",
 	Invite = "https://discord.gg/TdStSqtM8p"
 })
-local MainFarm = Window:MakeTab({"Farm", "bug"})
+local MainFarm = Window:MakeTab({"Farm", "swords"})
 local AutoSea = Window:MakeTab({"Sea", "Waves"})
 if Sea1 or Sea2 then
 AutoSea:AddSection({"Only In Sea 3"})
@@ -5095,7 +5097,7 @@ local ScreenGui = Instance.new("ScreenGui")
 		MoonImg.Image = game:GetService("Lighting").Sky.MoonTextureId
 
 		wait(5)
-
+		
 		game:GetService("CoreGui"):FindFirstChild("FullMoonLibrary"):Destroy() 
 	end
 })
@@ -5390,6 +5392,7 @@ function InstantChooseGear()
       end
     end)
   end})
+  
 MirageTab:AddToggle({
 	Name = "Auto Kill Player",
 	Default = false,
@@ -5399,52 +5402,39 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-	while wait() do
-		if getgenv().killplayertrain then
-			if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Transparency < 1 then
-					if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true then
+
+pcall(function()
+
+while wait() do
+
+if getgenv().killplayertrain then
+
+pcall(function()
+
+
+if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Transparency < 1 then
+			if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true then
 			for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
-			    if v.Name ~= game.Players.LocalPlayer.Name and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 100 then
+			    if v.Name ~= game.Players.LocalPlayer.Name and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150 then
 			        if v.Humanoid.Health > 0 then
-			            repeat wait()
 			              pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
 			                PlayerTP(v.HumanoidRootPart.CFrame)
-			                UseskillKill = true
-			                v.HumanoidRootPart.CanCollide = false
-			                v.HumanoidRootPart.Size = Vector3.new(60, 60, 60)
-			            until not getgenv().killplayertrain or not v.Parent or v.Humanoid.Health <= 0 
-			            UseskillKill = false
-			        end
-			    end
 			end
-		end
-		end
-		end
-	end
-end)
-spawn(function()
-    while wait() do
-		pcall(function()
-			if UseskillKill then
-				game:GetService("VirtualInputManager"):SendKeyEvent(true,"Z",false,game)
-				wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Z",false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"X",false,game)
-				wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"X",false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"C",false,game)
-				wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"C",false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"V",false,game)
-				wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"V",false,game)
 			end
-		end)
-    end
+			end
+			end
+			end
+
+ end)
+
+end
+
+end
+
 end)
+
+end)
+
 MirageTab:AddToggle({
 	Name = "Auto Die After Trial",
 	Default = false,
@@ -5482,6 +5472,7 @@ end
 end)
 
 end)
+
 MirageTab:AddToggle({
 	Name = "Auto Upgrade Race",
 	Default = false,
@@ -5520,6 +5511,121 @@ end)
 end)
 
 MirageTab:AddSection({"Temple Of Time"})
+MirageTab:AddToggle({
+	Name = "Teleport to Your Race Door",
+	Default = false,
+	Callback = function(Value)
+	   getgenv().DoorRace = Value
+	end
+})
+
+spawn(function()
+
+pcall(function()
+
+while wait() do
+
+if getgenv().DoorRace then
+
+pcall(function()
+
+
+if game:GetService("Players").LocalPlayer.Data.Race.Value == "Human" then
+                PlayerTP(CFrame.new(29221.822265625, 14890.9755859375, -205.99114990234375))
+				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Skypiea" then
+                PlayerTP(CFrame.new(28960.158203125, 14919.6240234375, 235.03948974609375))
+				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Fishman" then
+                PlayerTP(CFrame.new(28231.17578125, 14890.9755859375, -211.64173889160156))
+				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Cyborg" then
+                PlayerTP(CFrame.new(28502.681640625, 14895.9755859375, -423.7279357910156))
+				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Ghoul" then
+                PlayerTP(CFrame.new(28674.244140625, 14890.6767578125, 445.4310607910156))
+				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Mink" then
+                PlayerTP(CFrame.new(29012.341796875, 14890.9755859375, -380.1492614746094))
+				end
+
+ end)
+
+end
+
+end
+
+end)
+
+end)
+
+MirageTab:AddToggle({
+	Name = "Auto Talk With Sealed King",
+	Default = false,
+	Callback = function(Value)
+	   getgenv().TalkStone = Value
+	end
+})
+
+spawn(function()
+
+pcall(function()
+
+while wait() do
+
+if getgenv().TalkStone then
+
+pcall(function()
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "Check"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "Begin"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "TeleportBack"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "Teleport"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "Check"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "RaceV4Progress",
+    [2] = "Continue"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
+PlayerTP(CFrame.new(-5355, 314, -2490))
+
+ end)
+
+end
+
+end
+
+end)
+
+end)
+
 MirageTab:AddButton({"Teleport To Temple of Time", function()
     for i = 1, 5 do task.wait()
       Player.Character:SetPrimaryPartCFrame(CFrame.new(28286, 14897, 103))
@@ -5527,7 +5633,7 @@ MirageTab:AddButton({"Teleport To Temple of Time", function()
   end})
 end
 
-local QuestsTabs = Window:MakeTab({"Quests/Items", "Swords"})
+local QuestsTabs = Window:MakeTab({"Quests/Items", "bug"})
 local FruitAndRaid = Window:MakeTab({"Fruit/Raid", "Cherry"})
 local StatsTab = Window:MakeTab({"Stats", "signal"})
 StatsTab:AddSection({"Stats"})
@@ -8893,7 +8999,7 @@ local Tema = Misc:AddDropdown({
 Misc:AddSection({"Configs"})
 Misc:AddDropdown({
 	Name = "Select Fast Attack Type",
-	Options = {"Slow", "Normal" , "Fast"},
+	Options = {"Slow", "Normal" , "Fast (Risk)"},
 	Default = "Normal",
 	Flag = "NahMakmafadtkwmlaakfnkr",
 	Callback = function(Value)
@@ -8903,7 +9009,7 @@ Misc:AddDropdown({
 Misc:AddSlider({"Farm Distance", 5, 30, 1, 20, function(Value)
   getgenv().FarmPos = Vector3.new(0, Value or 15, Value or 10)getgenv().FarmDistance = Value
 end, "Misc/FarmDistance"})
-Misc:AddSlider({"Tween Speed", 50, 400, 5, 170, function(Value)
+Misc:AddSlider({"Tween Speed", 50, 340, 5, 250, function(Value)
   getgenv().TweenSpeed = Value
 end, "Misc/TweenSpeed"})
 Misc:AddSlider({"Bring Mobs Distance", 50, 500, 10, 250, function(Value)
@@ -9700,6 +9806,6 @@ task.spawn(function()
 		Title = "OMG Hub",
 		Content = "OMG Hub Loaded!",
 		SubContent = "",
-		Duration = 3
+		Duration = 10
 	})
 end)
