@@ -909,18 +909,14 @@ coroutine.wrap(function()
   end
   end)()
 
-local time = tick()
 local function PlayerClick()
   local plrPP = Player.Character and Player.Character.PrimaryPart
   if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude > 25 then return end
-  if getgenv().AutoClick and (tick() - time) >= getgenv().AutoClickDelay then
     task.spawn(function()
       VirtualUser:CaptureController()
       VirtualUser:Button1Down(Vector2.new(math.huge, math.huge))
     end)
-    time = tick()
   end
-end
 
 local function ServerHop()
   local Http = game:GetService("HttpService")
@@ -4747,7 +4743,7 @@ end
   AutoSea:AddSlider({
     Name = "Boat Tween Speed",
     Min = 100,
-    Max = 300,
+    Max = 340,
     Increase = 10,
     Default = 250,
     Flag = "Sea/BoatSpeed",
@@ -5876,7 +5872,7 @@ MainFarm:AddDropdown({
 MainFarm:AddToggle({"Auto Farm Level", false, function(Value)
   getgenv().AutoFarm_Level = Value;AutoFarm_Level()
 end, Description = "Ez <font color='rgb(253, 218, 13)'>Max Level</font>"})
-if PlayerLevel.Value >= 2400 and Sea3 then
+if Sea3 then
   MainFarm:AddToggle({
     Name = "Start Multi Farm",
     Callback = function(Value)
@@ -8622,11 +8618,11 @@ spawn(function()
 						if game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(3,0,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(3,0,0)
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(0,50,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
@@ -8636,11 +8632,11 @@ spawn(function()
 						if game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(3,0,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(3,0,0)
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(0,50,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
@@ -8650,11 +8646,11 @@ spawn(function()
 						if game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(3,0,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(3,0,0))
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = PlayerTP(game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(0,50,0))
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
@@ -9015,9 +9011,6 @@ end, "Misc/TweenSpeed"})
 Misc:AddSlider({"Bring Mobs Distance", 50, 500, 10, 250, function(Value)
   getgenv().BringMobsDistance = Value or 250
 end, "Misc/BringMobsDistance"})
-Misc:AddSlider({"Auto Click Delay", 0.1, 1, 0.01, 0.2, function(Value)
-  getgenv().AutoClickDelay = Value
-end, "Misc/AutoClickDelay"})
 Misc:AddToggle({"Fast Attack", true, function(Value)
   getgenv().FastAttack = Value
 end, "Misc/FastAttack"})
