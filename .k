@@ -5249,7 +5249,7 @@ game:GetService("StarterGui"):SetCore(
                     "SendNotification",
                     {
                         Title = "Gear Select", -- Required
-                        Text =  "Selected Gear: "..tostring(v)
+                        Text =  "Selected Gear: "..tostring(v),
                         Duration = 30
                     }
                 )
