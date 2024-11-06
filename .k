@@ -5414,7 +5414,7 @@ if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Trans
 			    if v.Name ~= game.Players.LocalPlayer.Name and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150 then
 			        if v.Humanoid.Health > 0 then
 			              pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-			                PlayerTP(v.HumanoidRootPart.CFrame)
+			                PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)
 			end
 			end
 			end
