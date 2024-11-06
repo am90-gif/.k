@@ -5144,17 +5144,9 @@ spawn(function()
         end)
     end
 end)
-MirageTab:AddDropdown({
-	Name = "Select Gear",
-	Options = {"Gear1", "Gear2" , "Gear3","Gear4","Gear5"},
-	Default = "",
-	Flag = "NahGearj",
-	Callback = function(Value)
-		getgenv().SelectGear = Value
-	end
-})
+
 MirageTab:AddToggle({
-	Name = "Auto Choose Gear (Select Gear)",
+	Name = "Auto Choose Gear",
 	Default = false,
 	Callback = function(Value)
 		getgenv().ChooseGear = Value
@@ -5171,7 +5163,166 @@ if getgenv().ChooseGear then
 
 pcall(function()
 
-InstantChooseGear()
+function fireremotechoosegear(gearname)
+            v = gearname
+            if v == "Gear1" then
+                local args = {
+                    [1] = "TempleClock",
+                    [2] = "SpendPoint"
+                }
+        
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                    unpack(args)
+                )
+            elseif v == "Gear2" then
+                local args = {
+                    [1] = "TempleClock",
+                    [2] = "SpendPoint",
+                    [3] = "Gear2",
+                    [4] = "Omega"
+                }
+        
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                    unpack(args)
+                )
+            elseif v == "Gear4" then
+                if condimemeaymeci.B == 2 then
+                    print("Gear 4 Omega")
+                    local args = {
+                        [1] = "TempleClock",
+                        [2] = "SpendPoint",
+                        [3] = "Gear4",
+                        [4] = "Omega"
+                    }
+        
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                        unpack(args)
+                    )
+                elseif condimemeaymeci.A == 2 then
+                    local args = {
+                        [1] = "TempleClock",
+                        [2] = "SpendPoint",
+                        [3] = "Gear4",
+                        [4] = "Alpha"
+                    }
+        
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                        unpack(args)
+                    )
+                elseif condimemeaymeci.A < 2 then
+                    v14 = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check")
+                    condimemeaymeci = v14.RaceDetails
+                    local args = {
+                        [1] = "TempleClock",
+                        [2] = "SpendPoint",
+                        [3] = "Gear4",
+                        [4] = "Alpha"
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                        unpack(args)
+                    )
+                end
+            elseif v == "Gear3" then
+                local args = {
+                    [1] = "TempleClock",
+                    [2] = "SpendPoint",
+                    [3] = "Gear3",
+                    [4] = "Alpha"
+                }
+        
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                    unpack(args)
+                )
+            elseif v == "Gear5" then
+                local args = {
+                    [1] = "TempleClock",
+                    [2] = "SpendPoint",
+                    [3] = "Gear5",
+                    [4] = "Default"
+                }
+        
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
+                    unpack(args)
+                )
+            end
+game:GetService("StarterGui"):SetCore(
+                    "SendNotification",
+                    {
+                        Title = "Gear Select", -- Required
+                        Text =  "Selected Gear: "..tostring(v)
+                        Duration = 30
+                    }
+                )
+        end 
+        function GetOutTempleGui()
+            for i, v in pairs(
+                getconnections(game:GetService("Players").LocalPlayer.PlayerGui.TempleGui.Skip.TextButton.Activated)
+            ) do
+                v.Function()
+            end
+        end 
+        function CanChoosePoint()
+            absd, bbbs =
+                pcall(
+                function()
+                    if
+                        game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check") and
+                            game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check").HadPoint
+                     then
+                        return true
+                    end
+                end
+            )
+            if absd and bbbs then
+                return true
+            end
+        end
+        function InstantChooseGear()
+            v14 = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check")
+            if v14 and v14.HadPoint then
+                condimemeaymeci = v14.RaceDetails
+                lastCF = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map["Temple of Time"].Prompt.CFrame
+                if
+                    (workspace.Map["Temple of Time"].Prompt.Position -
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 3
+                 then
+                    wait()
+                    fireproximityprompt(workspace.Map["Temple of Time"].Prompt.ProximityPrompt)
+                    wait(.5)
+                    for i, v in pairs(workspace.Map["Temple of Time"].InnerClock:GetChildren()) do
+                        if v:FindFirstChild("Highlight") and v.Highlight.Enabled then
+                            spawn(
+                                function()
+                                    fireremotechoosegear(v.Name)
+                                end
+                            )
+                        end
+                    end
+                    wait(.5)
+                    repeat
+                        GetOutTempleGui()
+                        task.wait()
+                    until not game:GetService("Players").LocalPlayer.PlayerGui.TempleGui.Enabled
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastCF
+                end
+                task.wait(5)
+            else
+                game:GetService("StarterGui"):SetCore(
+                    "SendNotification",
+                    {
+                        Title = "You hadnt point", -- Required
+                        Text = "You hadnt point to choose", -- Required
+                        Duration = 30
+                    }
+                )
+                task.wait(5)
+            end
+        end 
+        
+if CanChoosePoint() then 
+                    InstantChooseGear()
+                end
 
  end)
 
@@ -5182,105 +5333,7 @@ end
 end)
 
 end)
-function fireremotechoosegear()
-        if getgenv().SelectGear == "Gear1" then
-            print("Gear3")
-            local args = {[1] = "TempleClock", [2] = "SpendPoint"}
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                unpack(args)
-            )
-        elseif getgenv().SelectGear == "Gear2" then
-            print("Gear2")
-            local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear2", [4] = "Omega"}
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                unpack(args)
-            )
-        elseif getgenv().SelectGear == "Gear4" then
-            print("Gear4")
-            if condimemeaymeci.B == 2 then
-                print("Gear 4 Omega")
-                local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear4", [4] = "Omega"}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                    unpack(args)
-                )
-            elseif condimemeaymeci.A == 2 then
-                print("Gear 4 Alpha")
-                local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear4", [4] = "Alpha"}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                    unpack(args)
-                )
-            elseif condimemeaymeci.A < 2 then
-                v14 = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check")
-                condimemeaymeci = v14.RaceDetails
-                print("Gear 4 Alpha")
-                local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear4", [4] = "Alpha"}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                    unpack(args)
-                )
-            end
-        elseif getgenv().SelectGear == "Gear3" then
-            print("Gear3")
-            local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear3", [4] = "Alpha"}
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                unpack(args)
-            )
-        elseif getgenv().SelectGear == "Gear5" then
-            print("Gear5")
-            local args = {[1] = "TempleClock", [2] = "SpendPoint", [3] = "Gear5", [4] = "Default"}
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(
-                unpack(args)
-            )
-        end
-        game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Select Gear", Text = v, Duration = 30})
-    end
-function CheckAndTweenTemple()
-TempleOfTimeCFrame = CFrame.new(28734.3945,14888.2324,-109.071777,-0.650207579,4.1780531e-08,-0.759756625,1.97876595e-08,1,3.80575109e-08,0.759755,9.71147784e-09,-0.650207579)
-    if (TempleOfTimeCFrame.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1200 then
-        TweenTemple()
-    end
-    if (TempleOfTimeCFrame.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1200 then
-        TweenTemple()
-    end
-end
-function TweenTemple()
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(
-        "requestEntrance",
-        Vector3.new(28282.5703125, 14896.8505859375, 105.1042709350586)
-    )
-end
-function InstantChooseGear()
-        v14 = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check")
-        if v14 and v14.HadPoint then
-            condimemeaymeci = v14.RaceDetails
-            CheckAndTweenTemple()
-            PlayerTP(workspace.Map["Temple of Time"].Prompt.CFrame)
-            if
-                (workspace.Map["Temple of Time"].Prompt.Position -
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 3
-             then
-                wait(1)
-                fireproximityprompt(workspace.Map["Temple of Time"].Prompt.ProximityPrompt)
-                wait(5)
-                for r, v in pairs(workspace.Map["Temple of Time"].InnerClock:GetChildren()) do
-                    if v:FindFirstChild("Highlight") and v.Highlight.Enabled then
-                        print(v.Name)
-                        spawn(
-                            function()
-                                fireremotechoosegear()
-                            end
-                        )
-                    end
-                end
-            end
-            task.wait(300)
-        else
-            game:GetService("StarterGui"):SetCore(
-                "SendNotification",
-                {Title = "You hadnt point", Text = "You hadnt point to choose", Duration = 30}
-            )
-            task.wait(30)
-        end
-    end
+
   MirageTab:AddToggle({"Auto Finish Trial", false, function(Value)
     getgenv().AutoFinishTrial = Value
     task.spawn(function()
@@ -5470,7 +5523,7 @@ end)
 end)
 
 MirageTab:AddToggle({
-	Name = "Auto Upgrade Race",
+	Name = "Auto Train Race",
 	Default = false,
 	Callback = function(Value)
 		getgenv().BuyGear = Value
