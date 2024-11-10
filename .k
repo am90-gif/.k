@@ -913,9 +913,7 @@ local function PlayerClick()
   local plrPP = Player.Character and Player.Character.PrimaryPart
   if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude > 25 then return end
     task.spawn(function()
-    wait(.2)
-      VirtualUser:CaptureController()
-      VirtualUser:Button1Down(Vector2.new(math.huge, math.huge))
+    print("Attacking")
     end)
   end
 
