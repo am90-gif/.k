@@ -890,11 +890,9 @@ coroutine.wrap(function()
   local ac = CombatFrameworkR.activeController
   if ac and ac.equipped then
   if getgenv().FastAttack then
-  AttackFunction()
-  AttackPlayers()
   if getgenv().FastAttackMethod == "Normal" then
   if tick() - cooldownfastattack > .9 then wait(.1) cooldownfastattack = tick() end
-  elseif getgenv().FastAttackMethod == "Fast (Risk)" then
+  elseif getgenv().FastAttackMethod == "Fast" then
   if tick() - cooldownfastattack > 1.5 then wait(.01) cooldownfastattack = tick() end
   elseif getgenv().FastAttackMethod == "Slow" then
   if tick() - cooldownfastattack > .3 then wait(.7) cooldownfastattack = tick() end
@@ -909,13 +907,18 @@ coroutine.wrap(function()
   end
   end)()
 
+local time = tick()
 local function PlayerClick()
   local plrPP = Player.Character and Player.Character.PrimaryPart
   if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude > 25 then return end
+  if getgenv().FastAttack and (tick() - time) >= getgenv().AutoClickDelay then
     task.spawn(function()
-    print("Attacking")
+AttackFunction()
+AttackPlayers()
     end)
+    time = tick()
   end
+end
 
 local function ServerHop()
   local Http = game:GetService("HttpService")
@@ -9047,7 +9050,7 @@ local Tema = Misc:AddDropdown({
 Misc:AddSection({"Configs"})
 Misc:AddDropdown({
 	Name = "Select Fast Attack Type",
-	Options = {"Slow", "Normal" , "Fast (Risk)"},
+	Options = {"Slow", "Normal" , "Fast"},
 	Default = "Normal",
 	Flag = "NahMakmafadtkwmlaakfnkr",
 	Callback = function(Value)
@@ -9063,6 +9066,9 @@ end, "Misc/TweenSpeed"})
 Misc:AddSlider({"Bring Mobs Distance", 50, 500, 10, 250, function(Value)
   getgenv().BringMobsDistance = Value or 250
 end, "Misc/BringMobsDistance"})
+Misc:AddSlider({"Fast Attack Delay", 0.1, 0.9, 0.01, 0, function(Value)
+  getgenv().AutoClickDelay = Value
+end, "Misc/AutoClickDelay"})
 Misc:AddToggle({"Fast Attack", true, function(Value)
   getgenv().FastAttack = Value
 end, "Misc/FastAttack"})
@@ -9070,9 +9076,6 @@ Misc:AddToggle({"Increase Attack Distance", true, function(Value)
   getgenv().AttackDistance = Value
   task.spawn(AttackDistance)
 end, "Misc/IncreaseAttackDistance"})
-Misc:AddToggle({"Auto Click", true, function(Value)
-  getgenv().AutoClick = Value
-end, "Misc/AutoClick"})
 Misc:AddToggle({"Bring Mobs", true, function(Value)
   getgenv().BringMobs = Value
 end, "Misc/BringMobs"})
