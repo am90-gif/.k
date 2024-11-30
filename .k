@@ -1,48 +1,4 @@
 repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer  
-local ScreenGui = Instance.new("ScreenGui")
-local Fps = Instance.new("TextLabel")
-local Ping = Instance.new("TextLabel")
-
-ScreenGui.Parent = game.CoreGui
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-Fps.Name = "Fps"
-Fps.Parent = ScreenGui
-Fps.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Fps.BackgroundTransparency = 1.000
-Fps.Position = UDim2.new(0.786138654, 0, 0, 0)
-Fps.Size = UDim2.new(0, 125, 0, 25)
-Fps.Font = Enum.Font.SourceSans
-Fps.TextColor3 = Color3.fromRGB(255, 255, 255)
-Fps.TextScaled = true
-Fps.TextSize = 14.000
-Fps.TextWrapped = true
-
-Ping.Name = "Ping"
-Ping.Parent = ScreenGui
-Ping.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Ping.BackgroundTransparency = 1.000
-Ping.BorderColor3 = Color3.fromRGB(255, 255, 255)
-Ping.Position = UDim2.new(0.700000048, 0, 0, 0)
-Ping.Size = UDim2.new(0, 125, 0, 25)
-Ping.Font = Enum.Font.SourceSans
-Ping.TextColor3 = Color3.fromRGB(253, 253, 253)
-Ping.TextScaled = true
-Ping.TextSize = 14.000
-Ping.TextWrapped = true
-
-local script = Instance.new('LocalScript', Fps)
-local RunService = game:GetService("RunService")
-RunService.RenderStepped:Connect(function(frame) -- This will fire every time a frame is rendered
-script.Parent.Text = ("FPS: "..math.round(1/frame)) 
-end)
-
-local script = Instance.new('LocalScript', Ping)
-local RunService = game:GetService("RunService")
-RunService.RenderStepped:Connect(function(ping) 
-script.Parent.Text = ("Ping: " ..game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(math.round(2/ping))) -- your ping
-end)
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
 local RunService = game:GetService("RunService")
@@ -364,13 +320,9 @@ local function GetBossQuest(BossName)
 end
 
 local BossListT = {
-  -- Sea 1 --
-  -- Raid Boss
   "Greybeard",
   "The Saw",
   "Saber Expert",
-  
-  -- Normal Boss
   "The Gorilla King",
   "Bobby",
   "Yeti",
@@ -383,30 +335,20 @@ local BossListT = {
   "Wysper",
   "Thunder God",
   "Cyborg",
-  
-  -- Sea 2 --
-  -- Raid Boss
   "Darkbeard",
   "Cursed Captain",
   "Order",
   "Don Swan",
-  
-  -- Normal Blss
   "Diamond",
   "Jeremy",
   "Fajita",
   "Smoke Admiral",
   "Awakened Ice Admiral",
   "Tide Keeper",
-  
-  -- Sea 3 --
-  -- Raid Boss
   "Dough King",
   "Cake Prince",
   "rip_indra True Form",
   "Soul Reaper",
-  
-  -- Normal Boss
   "Stone",
   "Island Empress",
   "Kilo Admiral",
@@ -418,7 +360,6 @@ local BossListT = {
 
 task.spawn(function()
   local PortalPos = {}
-  
   if Sea1 then
     PortalPos = {
       Vector3.new(-4652, 873, -1754), -- Sky Island 1
@@ -443,11 +384,10 @@ task.spawn(function()
       Vector3.new(28286, 14897, 103) -- Temple of Time
     }
   end
-  
+ 
   function GetTPPos(position)
     local NearPos = math.huge
     local TpPos = Vector3.new()
-    
     table.foreach(PortalPos, function(___, pos)
       if (pos - position).Magnitude <= NearPos then
         NearPos = (pos - position).Magnitude
@@ -493,11 +433,9 @@ end
 local function KillAura()
   local function Kill(_,Enemie)
     local EnemieH = Enemie:FindFirstChild("Humanoid")
-    
     if EnemieH and EnemieH.Health > 0 then
       local PlayerPP = Player.Character and Player.Character.PrimaryPart
       local EnemiePP = Enemie.PrimaryPart
-      
       if PlayerPP and EnemiePP and (EnemiePP.Position - PlayerPP.Position).Magnitude < 1500 then
         EnemieH.Health = 0
         EnemiePP.Size = Vector3.new(75, 75, 75)
@@ -506,13 +444,11 @@ local function KillAura()
       end
     else
       local EnemieHead = Enemie:FindFirstChild("Head")
-      
       if EnemieHead then
         EnemieHead:Destroy()
       end
     end
   end
-  
   table.foreach(Enemies:GetChildren(), Kill)
   table.foreach(ReplicatedStorage:GetChildren(), Kill)
 end
@@ -559,7 +495,6 @@ local function AddESP(Part, ESPColor)
   
   local Folder = Instance.new("Folder", Part)
   Folder.Name = "ESP_REDzHUB"
-  
   local BHA = Instance.new("BoxHandleAdornment", Folder)
   BHA.Size = Vector3.new(1, 0, 1, 0)
   BHA.Name = "ESP_REDzHUB"
@@ -703,13 +638,11 @@ end
 
 local CameraShaker = require(ReplicatedStorage.Util.CameraShaker)
 CameraShaker:Stop()
-
 function GetBladeHit()
   local CombatFrameworkLib = debug.getupvalues(require(Player.PlayerScripts.CombatFramework))
   local CmrFwLib = CombatFrameworkLib[2]
   local p13 = CmrFwLib.activeController
   local weapon = p13.blades[1]
-  
   if not weapon then 
     return weapon
   end
@@ -775,8 +708,6 @@ task.spawn(function()
   end
   end)
 end
-
---[Function RmFzdCBBdHRhY2s=]
 
 function CurrentWeapon()
 local ac = CombatFrameworkR.activeController
@@ -949,7 +880,6 @@ local function VerifyNPC(EnemieName)
       end
     end
   end
-  
   table.foreach(Enemies:GetChildren(), Verify)
   table.foreach(ReplicatedStorage:GetChildren(), Verify)
   return Stats
@@ -965,7 +895,6 @@ end
 local function VerifyTool(ToolName)
   local plrChar = Player and Player.Character
   local plrBag = Player and Player.Backpack
-  
   if plrChar then
     return plrChar:FindFirstChild(ToolName) or plrBag:FindFirstChild(ToolName)
   end
@@ -991,7 +920,6 @@ end
 
 local function GetToolLevel(ToolName)
   local Tool = VerifyTool(ToolName)
-  
   if Tool and Tool:FindFirstChild("Level") then
     return Tool.Level.Value
   end
@@ -1011,11 +939,9 @@ local function GetEnemies(EnemiesList)
   local function Verify(_,Enemie)
     if table.find(EnemiesList, Enemie.Name) then
       local EnemieH = Enemie:FindFirstChild("Humanoid")
-      
       if EnemieH and EnemieH.Health > 0 then
         local EnemiePP = Enemie.PrimaryPart
         local PlayerPP = Player.Character and Player.Character.PrimaryPart
-        
         if EnemiePP and PlayerPP and (PlayerPP.Position - EnemiePP.Position).Magnitude <= Distance then
           Distance = (PlayerPP.Position - EnemiePP.Position).Magnitude
           Nearest = Enemie
@@ -1033,7 +959,6 @@ task.spawn(function()
   AimBotPart = function(part, tool)
     local plrChar = Player and Player.Character
     local plrTool = plrChar and plrChar:FindFirstChildOfClass("Tool")
-    
     if tool and tool:FindFirstChild("RemoteEvent") and part then
       getgenv().AimbotPos = part.Position
       tool.RemoteEvent:FireServer(part.Position)
@@ -1042,7 +967,6 @@ task.spawn(function()
       plrTool.RemoteEvent:FireServer(part.Position)
     end
   end
-  
   local oldhook
   oldhook = hookmetamethod(game, "__namecall", function(self, Vector, ...)
     if self.Name == "RemoteEvent" and getnamecallmethod():lower() == "fireserver" then
@@ -1121,7 +1045,6 @@ local function AutoChestBypass()
     local Chest3 = workspace:FindFirstChild("Chest3")
     local Chest2 = workspace:FindFirstChild("Chest2")
     local Chest1 = workspace:FindFirstChild("Chest1")
-    
     if not VerifyTool("God's Chalice") and not VerifyTool("Fist of Darkness") then
       if plrRP and Chest3 and Chest3.Transparency < 1 then
         plrRP.CFrame = Chest3.CFrame
@@ -1150,7 +1073,6 @@ local function AutoChestTween2()
     local ChestDistance = math.huge
     local Chest = nil
     local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-    
     for _,ChestVerify in pairs(workspace:GetChildren()) do
       if ChestVerify:IsA("BasePart") and ChestVerify.Transparency < 1 then
         if ChestVerify.Name == "Chest3" or ChestVerify.Name == "Chest2" or ChestVerify.Name == "Chest1" then
@@ -1176,7 +1098,6 @@ local function AutoChestTween()
     local ChestDistance = math.huge
     local Chest = nil
     local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-    
     for _,ChestVerify in pairs(workspace:GetChildren()) do
       if ChestVerify:IsA("BasePart") and ChestVerify.Transparency < 1 then
         if ChestVerify.Name == "Chest3" or ChestVerify.Name == "Chest2" or ChestVerify.Name == "Chest1" then
@@ -1213,10 +1134,8 @@ local function StartQuest(quest, number, QuestPos)
 end
 
 local function Get_LevelQuest()
-  local Level = PlayerLevel.Value
-  
+ local Level = PlayerLevel.Value  
   if Sea1 then
-    -- Auto Farm Level Sea 1
     if Level < 10 then
       if tostring(Player.Team) == "Pirates" then
         Quest = {CFrame.new(1059, 17, 1546), false, "Bandit", "BanditQuest1", 1}
@@ -1358,7 +1277,6 @@ local function Get_LevelQuest()
       end
     end
   elseif Sea2 then
-    -- Auto Farm Level Sea 2
     if Level >= 700 and Level < 725 then
       Quest = {CFrame.new(-427, 73, 1835), false, "Raider", "Area1Quest", 1}
       QuestTween = {CFrame.new(-614, 90, 2240), CFrame.new(-894, 90, 2275), CFrame.new(-872, 90, 2481), CFrame.new(-552, 90, 2528)}
@@ -1457,7 +1375,6 @@ local function Get_LevelQuest()
       end
     end
   elseif Sea3 then
-    -- Auto Farm Level Sea 3
     if Level >= 1500 and Level < 1525 then
       Quest = {CFrame.new(-291, 44, 5580), false, "Pirate Millionaire", "PiratePortQuest", 1}
       QuestTween = {CFrame.new(-44, 70, 5623), CFrame.new(-219, 70, 5546), CFrame.new(-574, 70, 5496)}
@@ -1621,7 +1538,6 @@ task.spawn(function()while task.wait(1) do pcall(Get_LevelQuest)end;end)
 Get_LevelQuest()
 
 local function BringNPC(Enemie, MultBring)
-
   if not BringMobs or not BringMobsDistance then
     local EnemiePP = Enemie.PrimaryPart
     if EnemiePP then
@@ -1634,10 +1550,8 @@ local function BringNPC(Enemie, MultBring)
   local function Bring(_,NPC)
     if MultBring or NPC.Name == Enemie.Name then
       local EnemieH = NPC:FindFirstChild("Humanoid")
-      
       if EnemieH and EnemieH.Health > 0 then
         local EnePP1, EnePP2 = NPC.PrimaryPart, Enemie.PrimaryPart
-        
         if EnePP1 and EnePP2 then
           local Mag = (EnePP1.Position - EnePP2.Position).Magnitude
           if Mag < BringMobsDistance and Mag >= 1 then
@@ -1659,7 +1573,6 @@ local function BringNPC(Enemie, MultBring)
       end
     end
   end
-  
   table.foreach(Enemies:GetChildren(), Bring)
 end
 
@@ -1674,7 +1587,6 @@ task.spawn(function()
       end
     end
   end
-  
   while task.wait() do
     table.foreach(Enemies:GetChildren(), VerifyPos)
     table.foreach(ReplicatedStorage:GetChildren(), VerifyPos)
@@ -1800,13 +1712,9 @@ local function Configure(Farm)
     elseif getgenv().AutoCursedCaptain and VerifyNPC("Cursed Captain") then return true
     end
   elseif Farm == "Saw Boss" then
-    
   elseif Farm == "Bartilo Quest" then
-    
   elseif Farm == "Enel Boss" then
-  
   elseif Farm == "Greybeard Boss" then
-    
   elseif Farm == "Cake Prince" then
     if VerifyEliteBoss() then
     elseif not VerifyNPC("Cake Prince") and getgenv().TeleportToFruit and FruitFind() then return true
@@ -1832,8 +1740,6 @@ local function AutoFarm_Level()
     if Configure("Level") then
     else
       local Enemie = GetEnemies({Quest[3]})QuestVisible()
-      
-      -- if not VerifyQuest(Quest[3]) then FireRemote("AbandonQuest")end
       if not VerifyQuest(Quest[3]) then
         StartQuest(Quest[4], Quest[5], Quest[1])
       elseif Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
@@ -1881,11 +1787,8 @@ local function AutoFarmMastery()
   while getgenv().AutoFarmMastery do task.wait()
     local SkillHealth = getgenv().HealthSkill
     local Tool = getgenv().ToolMastery
-    
     local Enemie = GetEnemies(Quest.NPCs)
-    
     pcall(function()DestroySkillWarn()end)
-    
     if not QuestVisible() and not VerifyQuest(Quest[3]) then
       StartQuest(Quest[3], Quest[4], Quest[1])
       end
@@ -2262,7 +2165,6 @@ local function AutoFarmSea()
         end
       end
     end
-    
     table.foreach(Enemies:GetChildren(), Verify)
     table.foreach(ReplicatedStorage:GetChildren(), Verify)
     return Nearest
@@ -2273,11 +2175,9 @@ local function AutoFarmSea()
     local function Verify(_,Enemie)
       if Enemie.Name == EnemieName then
         local EnemieH = Enemie:FindFirstChild("Humanoid")
-        
         if EnemieH and EnemieH.Health > 0 then
           local EnemiePP = Enemie and Enemie.PrimaryPart
           local BoatPP = Boat and Boat.PrimaryPart
-          
           if BoatPP and EnemiePP and (BoatPP.Position - EnemiePP.Position).Magnitude < Distance then
             Distance = (BoatPP.Position - EnemiePP.Position).Magnitude
             Nearest = Enemie
@@ -2285,7 +2185,6 @@ local function AutoFarmSea()
         end
       end
     end
-    
     table.foreach(Enemies:GetChildren(), Verify)
     table.foreach(ReplicatedStorage:GetChildren(), Verify)
     return Nearest
@@ -2310,7 +2209,6 @@ local function AutoFarmSea()
   while getgenv().AutoFarmSea do task.wait()
     local plrChar = Player.Character
     local Boat = GetBoat()
-    
     local Terrorshark = GetSeaEnemie("Terrorshark")
     local Shark = GetSeaEnemie("Shark")
     local Piranha = GetSeaEnemie("Piranha")
@@ -2330,40 +2228,28 @@ local function AutoFarmSea()
       end
       
     elseif getgenv().Terrorshark and Terrorshark and Terrorshark:FindFirstChild("HumanoidRootPart") then
-      
       PlayerTP(Terrorshark.HumanoidRootPart.CFrame * CFrame.new(0, 40, 50))
       pcall(function()PlayerClick()ActiveHaki()EquipTool()plrChar.Humanoid.Sit = false end)
-      
       if Terrorshark:FindFirstChild("Humanoid") and Terrorshark.Humanoid.Health <= 0 then
         Terrorshark:Destroy()
       end
       
     elseif getgenv().Piranha and Piranha and Piranha:FindFirstChild("HumanoidRootPart") then
-      
       PlayerTP(Piranha.HumanoidRootPart.CFrame + getgenv().FarmPos)
       pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Piranha)plrChar.Humanoid.Sit = false end)
-      
-    elseif getgenv().FishCrewMember and FishCrewMember and FishCrewMember:FindFirstChild("HumanoidRootPart") then
-      
+    elseif getgenv().FishCrewMember and FishCrewMember and FishCrewMember:FindFirstChild("HumanoidRootPart") then 
       PlayerTP(FishCrewMember.HumanoidRootPart.CFrame + getgenv().FarmPos)
-      pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(FishCrewMember)plrChar.Humanoid.Sit = false end)
-      
-    elseif getgenv().Shark and Shark and Shark:FindFirstChild("HumanoidRootPart") then
-      
+      pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(FishCrewMember)plrChar.Humanoid.Sit = false end)   
+    elseif getgenv().Shark and Shark and Shark:FindFirstChild("HumanoidRootPart") then   
       PlayerTP(Shark.HumanoidRootPart.CFrame + getgenv().FarmPos)
-      pcall(function()PlayerClick()ActiveHaki()EquipTool()plrChar.Humanoid.Sit = false end)
-      
+      pcall(function()PlayerClick()ActiveHaki()EquipTool()plrChar.Humanoid.Sit = false end)   
       if Shark:FindFirstChild("Humanoid") and Shark.Humanoid.Health <= 0 then
         Shark:Destroy()
-      end
-      
-    elseif getgenv().PirateGrandBrigade and Boat1 and Boat1.PrimaryPart then
-      
+      end   
+    elseif getgenv().PirateGrandBrigade and Boat1 and Boat1.PrimaryPart then  
       PlayerTP(Boat1.PrimaryPart.CFrame + getgenv().FarmPos)
-      pcall(function()ActiveHaki()plrChar.Humanoid.Sit = false end)
-      
-      EquipToolTip(RandomEquip)
-      
+      pcall(function()ActiveHaki()plrChar.Humanoid.Sit = false end)  
+      EquipToolTip(RandomEquip)   
       if Boat1:FindFirstChild("Humanoid") and Boat1.Humanoid.Value <= 0 then
         Boat1:Destroy()
       end
@@ -2371,8 +2257,7 @@ local function AutoFarmSea()
       if plrChar and plrChar.PrimaryPart and (plrChar.PrimaryPart.Position - Boat1.PrimaryPart.Position).Magnitude < 60 then
         if getgenv().SeaAimBotSkill then
           AimBotPart(Boat1.PrimaryPart)
-        end
-        
+        end     
         if getgenv().SeaSkillZ then
           KeyboardPress("Z")
         end
@@ -2390,22 +2275,17 @@ local function AutoFarmSea()
         end
       end
       
-    elseif getgenv().PirateBrigade and Boat2 and Boat2.PrimaryPart then
-      
+    elseif getgenv().PirateBrigade and Boat2 and Boat2.PrimaryPart then    
       PlayerTP(Boat2.PrimaryPart.CFrame + getgenv().FarmPos)
-      pcall(function()ActiveHaki()plrChar.Humanoid.Sit = false end)
-      
-      EquipToolTip(RandomEquip)
-      
+      pcall(function()ActiveHaki()plrChar.Humanoid.Sit = false end)  
+      EquipToolTip(RandomEquip) 
       if Boat2:FindFirstChild("Humanoid") and Boat2.Humanoid.Value <= 0 then
         Boat2:Destroy()
-      end
-      
+      end 
       if plrChar and plrChar.PrimaryPart and (plrChar.PrimaryPart.Position - Boat2.PrimaryPart.Position).Magnitude < 60 then
         if getgenv().SeaAimBotSkill then
           AimBotPart(Boat2.PrimaryPart)
-        end
-        
+        end       
         if getgenv().SeaSkillZ then
           KeyboardPress("Z")
         end
@@ -2423,13 +2303,10 @@ local function AutoFarmSea()
         end
       end
       
-    elseif getgenv().FishBoat and Boat3 and Boat3.PrimaryPart then
-      
+    elseif getgenv().FishBoat and Boat3 and Boat3.PrimaryPart then  
       PlayerTP(Boat3.PrimaryPart.CFrame + getgenv().FarmPos)
       pcall(function()ActiveHaki()plrChar.Humanoid.Sit = false end)
-      
-      EquipToolTip(RandomEquip)
-      
+      EquipToolTip(RandomEquip) 
       if Boat3:FindFirstChild("Humanoid") and Boat3.Humanoid.Value <= 0 then
         Boat3:Destroy()
       end
@@ -2437,8 +2314,7 @@ local function AutoFarmSea()
       if plrChar and plrChar.PrimaryPart and (plrChar.PrimaryPart.Position - Boat3.PrimaryPart.Position).Magnitude < 60 then
         if getgenv().SeaAimBotSkill then
           AimBotPart(Boat3.PrimaryPart)
-        end
-        
+        end  
         if getgenv().SeaSkillZ then
           KeyboardPress("Z")
         end
@@ -2454,8 +2330,7 @@ local function AutoFarmSea()
         if getgenv().SeaSkillF then
           KeyboardPress("F")
         end
-      end
-      
+      end    
     elseif Boat and Boat:FindFirstChild("VehicleSeat") then
       PlayerTP(Boat.VehicleSeat.CFrame)
     end
@@ -2482,7 +2357,6 @@ local function AutoEliteHunter()
     if Configure("Elite Hunter") then
     else
       local NPC = "EliteHunterVerify"QuestVisible()
-      
       if VerifyQuest("Diablo") then
         NPC = "Diablo"
       elseif VerifyQuest("Deandre") then
@@ -2494,7 +2368,6 @@ local function AutoEliteHunter()
       end
       
       local EliteBoss = GetEnemies({NPC})
-      
       if EliteBoss and EliteBoss:FindFirstChild("HumanoidRootPart") then
         PlayerTP(EliteBoss.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -2514,7 +2387,6 @@ local function AutoBisentoBoss()
     if Configure("Greybeard Boss") then
     else
       local Greybeard = GetEnemies({"Greybeard"})
-      
       if Greybeard and Greybeard:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Greybeard.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -2530,7 +2402,6 @@ local function AutoSawBoss()
     if Configure("Saw Boss") then
     else
       local TheSaw = GetEnemies({"The Saw"})
-      
       if TheSaw and TheSaw:FindFirstChild("HumanoidRootPart") then
         PlayerTP(TheSaw.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -2543,7 +2414,6 @@ end
 
 local function AutoKenV2()
   local QuestActive = Player.PlayerGui.Main.Quest
-  
   local BossProgress = false
   local BanditProgress = false
   local QuestProgress = 0
@@ -2560,7 +2430,6 @@ local function AutoKenV2()
   while getgenv().AutoKenV2 do task.wait()
     local plrLevel = PlayerLevel.Value
     local QuestTitle = QuestActive.Container.QuestTitle.Title
-    
     if plrLevel < 1800 then
     elseif QuestProgress == 3 then
       if VerifyTool("") then
@@ -2595,7 +2464,6 @@ local function AutoKenV2()
       end
     elseif not BanditProgress then QuestVisible()
       local Enemie = GetEnemies({"Forest Pirate"})
-      
       if QuestActive.Visible and not string.find(QuestTitle.Text, "Forest Pirate") and not string.find(QuestTitle.Text, "50") then
         FireRemote("AbandonQuest")
       end
@@ -2628,7 +2496,6 @@ end
 
 local function AutoMusketeerHat()
   local QuestActive = Player.PlayerGui.Main.Quest
-  
   local BossProgress = false
   local BanditProgress = false
   local QuestProgress = 0
@@ -2644,11 +2511,9 @@ local function AutoMusketeerHat()
   while getgenv().AutoMusketeerHat do task.wait()
     local plrLevel = PlayerLevel.Value
     local QuestTitle = QuestActive.Container.QuestTitle.Title
-    
     if plrLevel < 1800 then
     elseif not BanditProgress then
       local Enemie = GetEnemies({"Forest Pirate"})
-      
       if not QuestActive.Visible then
         QuestTitle.Text = ""
       end
@@ -2666,7 +2531,6 @@ local function AutoMusketeerHat()
       end
     elseif not BossProgress then
       local CursedCaptain = GetEnemies({"Captain Elephant"})
-      
       if not QuestActive.Visible then
         QuestTitle.Text = ""
       end
@@ -2694,7 +2558,6 @@ local function AutoEnelBossPole()
     if Configure("Enel Boss") then
     else
       local Enel = GetEnemies({"Thunder God"})
-      
       if Enel and Enel:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enel.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -2707,10 +2570,8 @@ end
 
 local function AutoCursedDualKatana()
   local Cursed, DoorProgress = WaitPart(Map, "Turtle", "Cursed")
-  
   local function MasterySwords()
     local TushitaM, YamaM = ItemMastery("Tushita"), ItemMastery("Yama")
-    
     if TushitaM and TushitaM < 350 then
       if not VerifyTool("Tushita") then
         FireRemote("LoadItem", "Tushita")
@@ -2736,7 +2597,6 @@ local function AutoCursedDualKatana()
   local function IndentifyQuest()
     if VerifyItem("Cursed Dual Katana") then return {"Finished"} end -- Virefica se o jogador possui a CDK
     if MasterySwords() then return {"MasterySwords"} end -- Verifica a maestria da Yama e a Tushita
-    
     local Door = Cursed:FindFirstChild("Breakable")
     if Door and Door.CanCollide then
       local Prog = FireRemote("CDKQuest", "OpenDoor")
@@ -2748,7 +2608,6 @@ local function AutoCursedDualKatana()
     end -- Verifica se a porta está aberta
     
     local Count = GetMaterial("Alucard Fragment") -- Pega a quantidade de material atual
-    
     if Count == 6 then -- Verifica se é a ultima missão
       return {"FinalQuest"}
     elseif Count == 0 then
@@ -2801,7 +2660,6 @@ local function AutoCursedDualKatana()
           end
         end
       end
-      
       if Enemie then
         local Enemies = GetEnemies({Enemie.Name})
         if Enemies and Enemies:FindFirstChild("HumanoidRootPart") then
@@ -2867,7 +2725,6 @@ local function AutoCursedDualKatana()
       end
     else
       local SoulReaper = GetEnemies({"Soul Reaper"})
-      
       if SoulReaper and SoulReaper:FindFirstChild("HumanoidRootPart") then
         PlayerTP(SoulReaper.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0))DisableTools()
       elseif VerifyTool("Hallow Essence") then
@@ -2915,7 +2772,6 @@ local function AutoCursedDualKatana()
   local function PirateRaid()
     if VerifyRaidPirate(true) then
       local Enemie = GetPirateRaidNPC()
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
@@ -2934,7 +2790,6 @@ local function AutoCursedDualKatana()
       if plrPP and (plrPP.Position - HeavenlyDimension.WorldPivot.p).Magnitude < 2500 then
         local Enemies = GetEnemies({"Heaven's Guardian", "Cursed Skeleton"}, 2500)
         local Torch = GetTorch(HeavenlyDimension)
-        
         if Enemies then
           PlayerTP(Enemies.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()ActiveHaki()EquipTool()BringNPC(Enemies, true)end)
@@ -2951,7 +2806,6 @@ local function AutoCursedDualKatana()
       end
     else
       local Boss = GetEnemies({"Cake Queen"})
-      
       if Boss and Boss:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Boss.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()ActiveHaki()EquipTool()end)
@@ -2965,7 +2819,6 @@ local function AutoCursedDualKatana()
   local function TalkBoatsDealer()
     local plrPP = Player.Character and Player.Character.PrimaryPart
     local BoatDealer = NPCS:FindFirstChild("Luxury Boat Dealer")
-    
     if plrPP then
       if not Boat1 then
         PlayerTP(CFrame.new(-9550, 21, 4638))getgenv().CursedDualKatana = true
@@ -3043,7 +2896,6 @@ local function AutoCursedDualKatana()
                   Pedestal, Prompt = Pedestal1, Pedestal1.ProximityPrompt
                 end
               end
-              
               if DialogVisible() then
                 VirtualUser:ClickButton1(Vector2.new(1e4, 1e4))
               else
@@ -3092,7 +2944,6 @@ local function AutoRainbowHaki()
   while getgenv().AutoRainbowHaki do task.wait()
     if VerifyQuest("Stone") then
       local Enemie = GetEnemies({"Stone"})
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3104,7 +2955,6 @@ local function AutoRainbowHaki()
       end
     elseif VerifyQuest("Island Empress") then
       local Enemie = GetEnemies({"Island Empress"})
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3116,7 +2966,6 @@ local function AutoRainbowHaki()
       end
     elseif VerifyQuest("Kilo Admiral") then
       local Enemie = GetEnemies({"Kilo Admiral"})
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3128,7 +2977,6 @@ local function AutoRainbowHaki()
       end
     elseif VerifyQuest("Captain Elephant") then
       local Enemie = GetEnemies({"Captain Elephant"})
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3140,7 +2988,6 @@ local function AutoRainbowHaki()
       end
     elseif VerifyQuest("Beautiful Pirate") then
       local Enemie = GetEnemies({"Beautiful Pirate"})
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3165,7 +3012,6 @@ local function AutoSoulGuitar()
     local plrChar = Player and Player.Character
     local plrPP = plrChar and plrChar.PrimaryPart
     local EnemiesNumber = 0
-    
     for _,npc in pairs(Enemies:GetChildren()) do
       if npc and npc.Name == "Living Zombie" and npc.PrimaryPart and plrPP
       and (npc.PrimaryPart.Position - plrPP.Position).Magnitude < 1000 then
@@ -3198,12 +3044,9 @@ local function AutoSoulGuitar()
     --[[game:GetService("Workspace").Map["Haunted Castle"].ElevatorDoor.Left
     game:GetService("Workspace").NPCs["Skeleton Machine"].HumanoidRootPart
     game:GetService("Workspace").Map["Haunted Castle"].Placard1.Right.Part]]
-    
     local plrChar = Player and Player.Character
     local plrPP = plrChar and plrChar.PrimaryPart
-    
     PlayerTP(CFrame.new(-10129, 154, 5928))
-    
     if plrPP and (plrPP.Position - Vector3.new(-10129, 154, 5928)).Magnitude < 5 and BringZombie() > 5 then
       pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
     end
@@ -3213,7 +3056,6 @@ end
 local function AutoUnlockSaber()
   local RichSonProgress = 0
   local SickManProgress = 0
-  
   task.spawn(function()
     while getgenv().AutoUnlockSaber do task.wait()
       RichSonProgress = FireRemote("ProQuestProgress","RichSon")
@@ -3225,11 +3067,9 @@ local function AutoUnlockSaber()
       local plrChar = Player and Player.Character
       local plrBag = Player.Backpack
       local plrRP = plrChar:FindFirstChild("HumanoidRootPart")
-      local Plates = game:GetService("Workspace").Map.Jungle.QuestPlates
-      
+      local Plates = game:GetService("Workspace").Map.Jungle.QuestPlates      
       if not workspace.Map.Jungle.Final.Part.CanCollide then
-        local Enemie = GetEnemies({"Saber Expert"})
-        
+        local Enemie = GetEnemies({"Saber Expert"})      
         if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3241,8 +3081,7 @@ local function AutoUnlockSaber()
         PlayerTP(CFrame.new(-1408, 30, 3))
         EquipToolName("Relic")
       elseif SickManProgress == 1 and RichSonProgress == 0 and not workspace.Map.Desert.Burn.Part.CanCollide then
-        local Enemie = GetEnemies({"Mob Leader"})
-        
+        local Enemie = GetEnemies({"Mob Leader"})      
         if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3265,8 +3104,7 @@ local function AutoUnlockSaber()
           local Plate2 = Plates:FindFirstChild("Plate2")
           local Plate3 = Plates:FindFirstChild("Plate3")
           local Plate4 = Plates:FindFirstChild("Plate4")
-          local Plate5 = Plates:FindFirstChild("Plate5")
-          
+          local Plate5 = Plates:FindFirstChild("Plate5")          
           if Plate1 and Plate1:FindFirstChild("Button") and Plate1.Button.BrickColor ~= BrickColor.new("Camo") then
             PlayerTP(Plate1.Button.CFrame)
           elseif Plate2 and Plate2:FindFirstChild("Button") and Plate2.Button.BrickColor ~= BrickColor.new("Camo") then
@@ -3290,8 +3128,7 @@ local function AutoFarmEctoplasm()
   while getgenv().AutoFarmEctoplasm do task.wait()
     if Configure("Ectoplasm") then
     else
-      local Enemie = GetEnemies({"Ship Deckhand", "Ship Engineer", "Ship Steward", "Ship Officer"})
-      
+      local Enemie = GetEnemies({"Ship Deckhand", "Ship Engineer", "Ship Steward", "Ship Officer"})      
       if Enemie then
       if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "ShipQuest2", 2)
@@ -3306,8 +3143,7 @@ end
 end
 
 local function AutoFarmMaterial()
-  local EnemiesList, NPCPos = {}
-  
+  local EnemiesList, NPCPos = {}  
   task.spawn(function()
     while getgenv().AutoFarmMaterial do task.wait()
       local Material = getgenv().MaterialSelected
@@ -3354,8 +3190,7 @@ local function AutoFarmMaterial()
   while getgenv().AutoFarmMaterial do task.wait()
     if Configure("Material") then
     else
-      local Enemie = GetEnemies(EnemiesList)
-      
+      local Enemie = GetEnemies(EnemiesList)   
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
@@ -3392,7 +3227,6 @@ local function AutoPiratesSea()
       for _,npc in pairs(Enemies:GetChildren()) do
         if npc.Name ~= "rip_indra True Form" then
           local npcH = npc:FindFirstChild("Humanoid")
-          
           if npcH and npcH.Health > 0 then
             if npc and npc.PrimaryPart and (npc.PrimaryPart.Position - Vector3.new(-5556, 314, -2988)).Magnitude < 700 then
               Enemie = npc
@@ -3400,7 +3234,6 @@ local function AutoPiratesSea()
           end
         end
       end
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
@@ -3421,14 +3254,12 @@ end
 local function AutoSecondSea()
   local Map = workspace:WaitForChild("Map", 9e9)
   local IceMap = Map:WaitForChild("Ice", 9e9)
-  
   while getgenv().AutoSecondSea do task.wait()
     if PlayerLevel.Value < 700 then
     else
       local plrChar = Player and Player.Character
       local plrPP = Player and Player.Character and Player.Character.PrimaryPart
       local DoorArgs = IceMap:FindFirstChild("Door") and IceMap.Door.CanCollide and IceMap.Door.Transparency < 1
-      
       if not VerifyTool("Key") and DoorArgs then
         PlayerTP(CFrame.new(4852, 6, 719))
         if plrPP and (plrPP.Position - Vector3.new(4852, 6, 719)).Magnitude < 5 then
@@ -3439,7 +3270,6 @@ local function AutoSecondSea()
         PlayerTP(CFrame.new(1346, 37, -1329))
       elseif VerifyNPC("Ice Admiral") and IceMap:FindFirstChild("Door") and not IceMap.Door.CanCollide and IceMap.Door.Transparency > 0 then
         local IceAdmiral = GetEnemies({"Ice Admiral"})
-        
         if IceAdmiral and IceAdmiral:FindFirstChild("HumanoidRootPart") then
           PlayerTP(IceAdmiral.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3454,12 +3284,10 @@ end
 
 local function AutoThirdSea()
   local QuestProgress = 0
-  
   local function GetProxyNPC()
     local Distance = 2000
     local NPC = nil
     local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-    
     for _,npc in pairs(Enemies:GetChildren()) do
       if npc.Name == "rip_indra" then
         if plrChar and npc and npc:FindFirstChild("HumanoidRootPart") and (plrChar.Position - npc.HumanoidRootPart.Position).Magnitude <= Distance then
@@ -3470,7 +3298,6 @@ local function AutoThirdSea()
     end
     return NPC
   end
-  
   task.spawn(function()
     while getgenv().AutoThirdSea do task.wait()
       QuestProgress = FireRemote("ZQuestProgress", "Check")
@@ -3513,22 +3340,17 @@ local function AutoBartiloQuest()
   end)
   
   local QuestActive = Player.PlayerGui.Main.Quest
-  
   while getgenv().AutoBartiloQuest do task.wait()
     if PlayerLevel.Value >= 850 then
       local QuestTitle = QuestActive.Container.QuestTitle.Title
       if BartiloQuestLevel == 0 then
-        
         local Enemie = GetEnemies({"Swan Pirate"})
-        
         if not QuestActive.Visible then
           QuestTitle.Text = ""
         end
-        
         if QuestActive.Visible and not string.find(QuestTitle.Text, "Swan Pirate") and not string.find(QuestTitle.Text, "50") then
           FireRemote("AbandonQuest")
         end
-        
         if not QuestActive.Visible and not string.find(QuestTitle.Text, "Swan Pirate") and not string.find(QuestTitle.Text, "50") then
           StartQuest1("BartiloQuest", 1)
           elseif Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
@@ -3539,14 +3361,12 @@ local function AutoBartiloQuest()
         end
       elseif BartiloQuestLevel == 1 then
         local Enemie1 = GetEnemies({"Jeremy"})
-        
         if Enemie1 and Enemie1:FindFirstChild("HumanoidRootPart") then
           PlayerTP(Enemie1.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie1)end)
         else
           PlayerTP(CFrame.new(2316, 449, 787))
         end
-      
       elseif BartiloQuestLevel == 2 then
         local Plates = game:GetService("Workspace").Map.Dressrosa:FindFirstChild("BartiloPlates")
         if Plates and Plates:FindFirstChild("Plate1") and Plates.Plate1.Color.G ~= 1 then
@@ -3576,11 +3396,9 @@ local function AutoRipIndra()
     if Configure("Rip Indra") then
     else
       local RipIndra1 = GetEnemies({"rip_indra True Form"})
- 
 if not RipIndra1 and not VerifyTool("God's Chalice") then
 AutoChestTween2()
 end
-
       if RipIndra1 and RipIndra1:FindFirstChild("HumanoidRootPart") then
         PlayerTP(RipIndra1.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3595,7 +3413,6 @@ end
 local function AutoKillLawBoss()
   while getgenv().AutoKillLawBoss do task.wait()
     local OrderBoss1 = GetEnemies({"Order"})
-    
     if OrderBoss1 and OrderBoss1:FindFirstChild("HumanoidRootPart") then
       PlayerTP(OrderBoss1.HumanoidRootPart.CFrame + getgenv().FarmPos)
       pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3608,11 +3425,9 @@ end
 local function AutoDarkbeard()
   while getgenv().AutoDarkbeard do task.wait()
     local Darkbeard1 = GetEnemies({"Darkbeard"})
-  
 if not Darkbeard1 and not VerifyTool("Fist of Darkness") then
 AutoChestTween2()
 end
-
     if Darkbeard1 and Darkbeard1:FindFirstChild("HumanoidRootPart") then
       PlayerTP(Darkbeard1.HumanoidRootPart.CFrame + getgenv().FarmPos)
       pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3628,7 +3443,6 @@ local function AutoKillDonSwan()
     if Configure("Don Swan") then
     else
       local Enemie1 = GetEnemies({"Don Swan"})
-      
       if Enemie1 and Enemie1:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie1.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3649,7 +3463,6 @@ local function AutoCursedCaptain()
     elseif getgenv().AutoFarmEctoplasm and not VerifyNPC("Cursed Captain") then
     else
       local Enemie1 = GetEnemies({"Cursed Captain"})
-      
       if Enemie1 and Enemie1:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie1.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3672,14 +3485,12 @@ local function AutoCakePrince()
     else
       if VerifyNPC("Dough King") then
         local DoughKing = GetEnemies({"Dough King"})
-        
         if DoughKing and DoughKing:FindFirstChild("HumanoidRootPart") then
           PlayerTP(DoughKing.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
         end
       elseif VerifyNPC("Cake Prince") then
         local CakePrince = GetEnemies({"Cake Prince"})
-        
         if CakePrince and CakePrince:FindFirstChild("HumanoidRootPart") then
           PlayerTP(CakePrince.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3687,7 +3498,6 @@ local function AutoCakePrince()
       else
         if not getgenv().AutoFarm_Level and not getgenv().AutoFarmBone then
           local Enemie = GetEnemies({"Head Baker", "Baking Staff", "Cake Guard", "Cookie Crafter"})
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "CakeQuest2", 2)
@@ -3719,7 +3529,6 @@ local function AutoDoughKing()
       FireRemote("CakeScientist", "Check")
     elseif VerifyNPC("Dough King") then
       local DoughKing = GetEnemies({"Dough King"})
-      
       if DoughKing and DoughKing:FindFirstChild("HumanoidRootPart") then
         PlayerTP(DoughKing.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3728,7 +3537,6 @@ local function AutoDoughKing()
       if VerifyTool("God's Chalice") and not VerifyTool("Sweet Chalice") then
         if string.find(CocoaStats, "Where") then
           local Enemie = GetEnemies({"Chocolate Bar Battler", "Cocoa Warrior"})
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "ChocQuest1", 2)
@@ -3743,7 +3551,6 @@ end
       or VerifyNPC("Deandre") and not VerifyTool("God's Chalice") and not VerifyTool("Sweet Chalice")
       or VerifyNPC("Diablo") and not VerifyTool("God's Chalice") and not VerifyTool("Sweet Chalice") then
         local NPC = "EliteHunterVerify"QuestVisible()
-        
         if VerifyQuest("Diablo") then
           NPC = "Diablo"
         elseif VerifyQuest("Deandre") then
@@ -3753,9 +3560,7 @@ end
         else
           task.spawn(function()FireRemote("EliteHunter")end)
         end
-        
         local EliteBoss = GetEnemies({NPC})
-        
         if EliteBoss and EliteBoss:FindFirstChild("HumanoidRootPart") then
           PlayerTP(EliteBoss.HumanoidRootPart.CFrame + getgenv().FarmPos)
           pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3763,7 +3568,6 @@ end
       else
         if not getgenv().AutoFarm_Level and not getgenv().AutoFarmBone then
           local Enemie = GetEnemies({"Head Baker", "Baking Staff", "Cake Guard", "Cookie Crafter"})
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "CakeQuest2", 2)
@@ -3781,20 +3585,17 @@ end
 
 local function KillAllBosses()
   local SelectedBoss
-  
   task.spawn(function()
     while getgenv().KillAllBosses do task.wait()
       local BossTable = {}
       local function Verify(_,Boss)
         if table.find(BossListT, Boss.Name) then
           local BossH = Boss:FindFirstChild("Humanoid")
-          
           if BossH and BossH.Health > 0 then
             table.insert(BossTable, Boss)
           end
         end
       end
-      
       table.foreach(Enemies:GetChildren(), Verify)
       table.foreach(ReplicatedStorage:GetChildren(), Verify)
       if BossTable[1] then
@@ -3807,7 +3608,6 @@ local function KillAllBosses()
     if SelectedBoss then
       local GetQuest, NotBossPos, Quest, QuestNun = GetBossQuest(SelectedBoss.Name)
       local Boss = SelectedBoss
-      
       if Boss and QuestVisible() and not VerifyQuest(Boss.Name) then
         FireRemote("AbandonQuest")
       end
@@ -3826,17 +3626,13 @@ end
 local function AutoFarmBossSelected()
   local GetQuest, GetQuestPos, Quest, NotBossPos, BossName = false, nil, nil, nil, getgenv().BossSelected or ""
   local QuestActive = Player.PlayerGui.Main.Quest
-  
   while getgenv().AutoFarmBossSelected do task.wait()
     BossName = getgenv().BossSelected or ""
     local plrChar = Player.Character and Player.Character.PrimaryPart
     if plrChar then
-      
       local GetQuest, NotBossPos, Quest, QuestNun = GetBossQuest(BossName)
-      
       if VerifyNPC(BossName) then
         local Boss1 = GetEnemies({BossName})
-        
         if not QuestActive.Visible then
           QuestActive.Container.QuestTitle.Title.Text = ""
         end
@@ -3880,11 +3676,9 @@ local function AutoSoulReaper()
     if Configure("Hallow Boss") then
     else
       local SoulReaper = GetEnemies({"Soul Reaper"})
-      
 if not SoulReaper and not VerifyTool("Hallow Essence") then
 AutoFarmBone2()
         end
-      
       if SoulReaper and SoulReaper:FindFirstChild("HumanoidRootPart") then
         PlayerTP(SoulReaper.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3909,7 +3703,6 @@ local function AutoFarmNearest()
       if EnemieH and EnemieH.Health > 0 then
         local EnemiePP = Enemie.PrimaryPart
         local PlayerPP = Player.Character and Player.Character.PrimaryPart
-        
         if EnemiePP and PlayerPP and (PlayerPP.Position - EnemiePP.Position).Magnitude <= Distance then
           Distance = (PlayerPP.Position - EnemiePP.Position).Magnitude
           Nearest = Enemie
@@ -3925,7 +3718,6 @@ local function AutoFarmNearest()
     if getgenv().AutoFarm_Level or getgenv().AutoRipIndra or getgenv().AutoCakePrince then
     else
       local Enemie = GetNearest()
-      
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
@@ -3942,7 +3734,6 @@ local function AutoGhoulRace()
   if PlayerRace ~= "Ghoul" then
 if GetMaterial("Ectoplasm") <= 100 then
 local Enemie = GetEnemies({"Ship Deckhand", "Ship Engineer", "Ship Steward", "Ship Officer"})
-      
       if Enemie then
       if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "ShipQuest2", 2)
@@ -3958,7 +3749,6 @@ end
     elseif getgenv().AutoFarmEctoplasm and not VerifyNPC("Cursed Captain") then
     else
       local Enemie1 = GetEnemies({"Cursed Captain"})
-      
       if Enemie1 and Enemie1:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie1.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -3997,17 +3787,14 @@ local function AutoRaceV2()
     if not Player.Data.Race:FindFirstChild("Evolved") then
       if QuestProgress == 0 then
         local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-        
         if plrChar and (plrChar.Position - Vector3.new(-2777, 73, -3570)).Magnitude < 5 then
           FireRemote("Alchemist", "2")
         else
           PlayerTP(CFrame.new(-2777, 73, -3570))
         end
       elseif QuestProgress == 1 then
-        
         local plrBag = Player:FindFirstChild("Backpack")
         local plrChar = Player.Character
-        
         if plrChar:FindFirstChild("Flower 1") then
           plrChar["Flower 1"].Parent = plrBag
         elseif plrChar:FindFirstChild("Flower 2") then
@@ -4022,7 +3809,6 @@ local function AutoRaceV2()
           PlayerTP(workspace["Flower2"].CFrame)
         elseif not plrBag:FindFirstChild("Flower 3") then
           local Enemie = GetEnemies({"Swan Pirate"})
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
             PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
             pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie)end)
@@ -4036,7 +3822,6 @@ local function AutoRaceV2()
         end
       elseif QuestProgress == 2 then
         local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-        
         if plrChar and (plrChar.Position - Vector3.new(-2777, 73, -3570)).Magnitude < 5 then
           FireRemote("Alchemist","3")
         else
@@ -4089,6 +3874,45 @@ local Window = redzlib:MakeWindow({
 
 local AFKOptions = {}
 
+for _, v in ipairs(game:GetService("CoreGui"):GetChildren()) do
+    if v.Name == "ELGATO HUB ON/OFF" or v.Name == "ELGATO TIME" then
+        v:Destroy()
+    end
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+local ImageButton = Instance.new("ImageButton")
+local UICorner = Instance.new("UICorner")
+local TextLabel = Instance.new("TextLabel")
+ScreenGui.Name = "ELGATO HUB ON/OFF"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+UILock = true
+TextLabel.Parent = ScreenGui
+TextLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BackgroundTransparency = 0.3
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(0.120833337, 0, 0.0602890813, 0)
+TextLabel.Size = UDim2.new(0, 250, 0, 25)
+TextLabel.Font = Enum.Font.FredokaOne
+TextLabel.Text = "Server Time"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 12
+TextLabel.TextWrapped = true
+local TextLabel_Gradient = Instance.new("UIGradient")
+spawn(function()
+    local startTime = tick()
+    while task.wait() do
+        pcall(function()
+            local elapsedTime = tick() - startTime
+            local hours = math.floor(elapsedTime / 3600)
+            local minutes = math.floor((elapsedTime % 3600) / 60)
+            local seconds = math.floor(elapsedTime % 60)
+            TextLabel.Text = "TIME : ".. hours.. ":".. minutes.. ":".. seconds.. " | FPS: " .. math.floor(workspace:GetRealPhysicsFPS()).. " | PING: " .. game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+        end)
+    end
+end)
+
 local Inicio = Window:MakeTab({Title = "Home", Icon = "home"})
 local Agradecimentos = Inicio:AddSection({Name = "Thanks"})
 local Mensagem = Inicio:AddParagraph({Title = "Message", Text = "Make With ❤️"})
@@ -4134,11 +3958,13 @@ spawn(function()
         pcall(function()
             while wait() do
                 if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == true then
+                if game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland") then
                     TimeKitsune:SetTitle(game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Text)
                 else
                     TimeKitsune:SetTitle("🧭 Waiting For Kitsune Island")
                 end
             end
+          end
         end)
     end)
   AutoSea:AddToggle({Name = "Auto Kitsune Island",Callback = function(Value)
@@ -4169,7 +3995,6 @@ function GetCountMaterials(MaterialName)
       local Modules = ReplicatedStorage:WaitForChild("Modules", 9e9)
       local Net = Modules:WaitForChild("Net", 9e9)
       local KitsuneRemote = Net:WaitForChild("RF/KitsuneStatuePray", 9e9)
-      
       while getgenv().TradeAzureEmber do task.wait()
       local AzureAvilable = GetCountMaterials("Azure Ember")
 					if AzureAvilable >= _G.SetToTradeAureEmber then
@@ -4178,6 +4003,7 @@ function GetCountMaterials(MaterialName)
       end
     end)
   end})
+  
   AutoSea:AddToggle({
 	Name = "Teleport to Kitsune Island",
 	Default = false,
@@ -4187,30 +4013,19 @@ function GetCountMaterials(MaterialName)
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().TpKitsune then
-
 pcall(function()
-
-
 if game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland") then
 PlayerTP(workspace._WorldOrigin.Locations:FindFirstChild("Kitsune Island").CFrame*CFrame.new(0,250,0))
 end
-
-
  end)
-
 end
-
 end
-
+end)
 end)
 
-end)
 AutoSea:AddToggle({
 	Name = "Auto Collect Azure Ember",
 	Default = false,
@@ -4220,51 +4035,24 @@ AutoSea:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().CollectAzure then
-
 pcall(function()
-
-
 local Players = game.Players
-
 local Player = Players.LocalPlayer
 
-
-
 local toMe = game:GetService("Workspace").EmberTemplate.Part
-
-
-
 function telePlr()
-
-   
-
    Player.Character.HumanoidRootPart.CFrame = CFrame.new(toMe.Position)
-
-   
-
    end
-
-
-
 telePlr()
-
-
-
  end)
-
 end
-
 end
-
+end)
 end)
 
-end)
   AutoSea:AddToggle({
 	Name = "Esp Kitsune",
 	Default = false,
@@ -4274,27 +4062,15 @@ end)
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EspKitsune then
-
 pcall(function()
-
-
 UpdateIslandKisuneESP() 
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 function UpdateIslandKisuneESP() 
@@ -4411,7 +4187,6 @@ end
       
       while getgenv().AutoWoodPlanks do task.wait()
         local Tree = GetTree()EquipToolTip(RandomEquip)
-        
         if Tree and Tree.PrimaryPart then
           PlayerTP(Tree.PrimaryPart.CFrame)
           local plrPP = Player.Character and Player.Character.PrimaryPart
@@ -4632,27 +4407,15 @@ AutoSea:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EspFrozen then
-
 pcall(function()
-
-
 UpdateIslandFrozenESP() 
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 function UpdateIslandFrozenESP() 
@@ -4803,29 +4566,17 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().TpMirage then
-
 pcall(function()
-
 	   if game:GetService("Workspace").Map:FindFirstChild("MysticIsland") then
                 PlayerTP(workspace.Map.MysticIsland.PrimaryPart.CFrame*CFrame.new(0,250,0))
 end
-
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -4837,28 +4588,17 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait(0.1) do
-
+while wait() do
 if getgenv().PullLever then
-
 pcall(function()
-
-
 if game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CheckTempleDoor") == true and game:GetService("Workspace").Map["Temple of Time"].Lever.Prompt:FindFirstChild("ProximityPrompt").Enabled == true then
 					fireproximityprompt(game:GetService("Workspace").Map["Temple of Time"].Lever.Prompt:FindFirstChild("ProximityPrompt"),0)
 				end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -4870,16 +4610,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait(0.1) do
-
+while wait() do
 if getgenv().TpAdvanced then
-
 pcall(function()
-
-
  if game:GetService("Workspace").NPCs:FindFirstChild("Advanced Fruit Dealer") then
 for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
 							if v.Name == "Advanced Fruit Dealer" then
@@ -4887,15 +4621,10 @@ for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
 							end
 						end
                 end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -4907,27 +4636,15 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EspMirage then
-
 pcall(function()
-
-
 UpdateIslandMirageESP() 
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 function UpdateIslandMirageESP() 
@@ -4968,7 +4685,6 @@ function CamToMoon()
 workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position,game:GetService("Lighting"):GetMoonDirection() + workspace.CurrentCamera.CFrame.Position)
 end
 
-
 MirageTab:AddToggle({
 	Name = "Auto Collect Blue Gear",
 	Default = false,
@@ -4978,16 +4694,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().GetGear then
-
 pcall(function()
-
-
 if game:GetService("Workspace").Map:FindFirstChild("MysticIsland") then
 						for i, v in pairs(game.workspace.Map.MysticIsland:GetChildren()) do
             if v:IsA("MeshPart") and v.MeshId == "rbxassetid://10153114969" then --and not v.CanCollide then
@@ -4995,15 +4705,10 @@ if game:GetService("Workspace").Map:FindFirstChild("MysticIsland") then
 									end
 									end
 									end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -5015,27 +4720,16 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait(0.1) do
-
+while wait() do
 if getgenv().LockCam then
-
 pcall(function()
-
-
 game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("ActivateAbility")
 CamToMoon()
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -5047,15 +4741,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoChestMirage then
-
 pcall(function()
-
 if game.Workspace.Map:FindFirstChild("MysticIsland") then
 for i,v in pairs(game:GetService("Workspace").Map.MysticIsland.Chests:GetChildren()) do 
 				if v.Name == "DiamondChest" or v.Name == "FragChest" then
@@ -5065,16 +4754,10 @@ for i,v in pairs(game:GetService("Workspace").Map.MysticIsland.Chests:GetChildre
 				end
 				end
 				end
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddButton({
@@ -5156,15 +4839,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().ChooseGear then
-
 pcall(function()
-
 function fireremotechoosegear(gearname)
             v = gearname
             if v == "Gear1" then
@@ -5325,15 +5003,10 @@ game:GetService("StarterGui"):SetCore(
 if CanChoosePoint() then 
                     InstantChooseGear()
                 end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
   MirageTab:AddToggle({"Auto Finish Trial", false, function(Value)
@@ -5453,16 +5126,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().killplayertrain then
-
 pcall(function()
-
-
 if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Transparency < 1 then
 			if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true then
 			for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
@@ -5475,15 +5142,10 @@ if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Trans
 			end
 			end
 			end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -5495,16 +5157,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait(0.1) do
-
+while wait() do
 if getgenv().DieTrial then
-
 pcall(function()
-
-
 if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Transparency < 1 then
 				if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true then
 					local Humn = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
@@ -5513,19 +5169,14 @@ if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Trans
 					end
 				end
 			end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
-	Name = "Auto Train Race",
+	Name = "Auto Buy Gear",
 	Default = false,
 	Callback = function(Value)
 		getgenv().BuyGear = Value
@@ -5533,32 +5184,20 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait(0.1) do
-
+while wait() do
 if getgenv().BuyGear then
-
 pcall(function()
-
-
 local args = {
     [1] = "UpgradeRace",
     [2] = "Buy"
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddSection({"Temple Of Time"})
@@ -5571,16 +5210,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().DoorRace then
-
 pcall(function()
-
-
 if game:GetService("Players").LocalPlayer.Data.Race.Value == "Human" then
                 PlayerTP(CFrame.new(29221.822265625, 14890.9755859375, -205.99114990234375))
 				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Skypiea" then
@@ -5594,15 +5227,10 @@ if game:GetService("Players").LocalPlayer.Data.Race.Value == "Human" then
 				elseif game:GetService("Players").LocalPlayer.Data.Race.Value == "Mink" then
                 PlayerTP(CFrame.new(29012.341796875, 14890.9755859375, -380.1492614746094))
 				end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MirageTab:AddToggle({
@@ -5614,15 +5242,10 @@ MirageTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().TalkStone then
-
 pcall(function()
-
 local args = {
     [1] = "RaceV4Progress",
     [2] = "Check"
@@ -5666,15 +5289,10 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
 
 PlayerTP(CFrame.new(-5355, 314, -2490))
-
- end)
-
-end
-
-end
-
 end)
-
+end
+end
+end)
 end)
 
 MirageTab:AddButton({"Teleport To Temple of Time", function()
@@ -5752,28 +5370,16 @@ StatsTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoStats1 then
-
 pcall(function()
-
-
 local a = {[1] = "AddPoint", [2] = "Melee", [3] = 5}
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(a))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 StatsTab:AddToggle({
@@ -5785,28 +5391,16 @@ StatsTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoStats2 then
-
 pcall(function()
-
-
 local a = {[1] = "AddPoint", [2] = "Defense", [3] = 5}
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(a))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 StatsTab:AddToggle({
@@ -5818,28 +5412,16 @@ StatsTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoStats3 then
-
 pcall(function()
-
-
 local a = {[1] = "AddPoint", [2] = "Sword", [3] = 5}
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(a))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 StatsTab:AddToggle({
@@ -5851,28 +5433,16 @@ StatsTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoStats4 then
-
 pcall(function()
-
-
 local a = {[1] = "AddPoint", [2] = "Gun", [3] = 5}
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(a))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 StatsTab:AddToggle({
@@ -5884,28 +5454,16 @@ StatsTab:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().AutoStats5 then
-
 pcall(function()
-
-
 local a = {[1] = "AddPoint", [2] = "Demon Fruit", [3] = 5}
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(a))
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
   
 local Teleport = Window:MakeTab({"Teleport", "Locate"})
@@ -5949,7 +5507,7 @@ MainFarm:AddToggle({
 })
 spawn(function()
         pcall(function()
-            while wait(.1) do
+            while wait() do
                 if getgenv().AutoPlayerHunter then
                     if game:GetService("Players").LocalPlayer.PlayerGui.Main.PvpDisabled.Visible == true then
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EnablePvp")
@@ -5962,22 +5520,12 @@ spawn(function()
 		while wait() do
 			if getgenv().AutoPlayerHunter then
 				if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
-					wait(.5)
 					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")
 				else
 					for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
 						if string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text,v.Name) then
-							repeat wait()	pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-								game:GetService("VirtualInputManager"):SendKeyEvent(true,"Z",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Z",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"X",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"X",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"C",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"C",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"V",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"V",false,game)
-								PlayerTP(v.HumanoidRootPart.CFrame * CFrame.new(1,7,3))								
-								v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+							repeat wait()pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
+							PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)				
 							until getgenv().AutoPlayerHunter == false or v.Humanoid.Health <= 0
 							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
 						end
@@ -5987,6 +5535,7 @@ spawn(function()
 		end
 	end)
 end
+
 MainFarm:AddToggle({
 	Name = "Auto Use Skills",
 	Default = false,
@@ -5996,15 +5545,10 @@ MainFarm:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
-while wait() do
-
+while wait(5) do
 if getgenv().AutoVojo then
-
 pcall(function()
-
 SkillKey = {
         Z = true,
         V = true,
@@ -6021,17 +5565,12 @@ local function AutoSkill()
     end
 end
             AutoSkill()
-
-
  end)
-
 end
-
 end
-
+end)
 end)
 
-end)
 MainFarm:AddToggle({"Auto Farm Nearest", false, function(Value)
   getgenv().AutoFarmNearest = Value;AutoFarmNearest()
 end})
@@ -6046,9 +5585,7 @@ elseif Sea2 then
 end
 
 --[[MainFarm:AddSection({"Christmas"})
-
 local TimeLabel = MainFarm:AddLabel({"Text", "Time for next gift : nil"})
-
 task.spawn(function()
   local Counter = workspace:WaitForChild("Countdown", 9e9)
   local SurfaceGui = Counter:WaitForChild("SurfaceGui", 9e9)
@@ -6185,28 +5722,15 @@ MainFarm:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().Trylucky then
-
 pcall(function()
-
-
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("gravestoneEvent", 2)
-
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MainFarm:AddToggle({
@@ -6218,28 +5742,15 @@ MainFarm:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().Pray then
-
 pcall(function()
-
-
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("gravestoneEvent", 1)
-
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 MainFarm:AddToggle({
@@ -6251,30 +5762,17 @@ MainFarm:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().TradeBone2 then
-
 pcall(function()
-
-
 if not VerifyTool("Hallow Essence") then
         FireRemote("Bones", "Buy", 1, 1)
         end
-
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
   table.insert(AFKOptions, MainFarm:AddToggle({
@@ -6288,7 +5786,6 @@ end)
   }))
   
 elseif Sea2 then
-  
   MainFarm:AddSection({"Ectoplasm"})
 local EctoCheck = MainFarm:AddParagraph({""})
 spawn(function()
@@ -6308,7 +5805,6 @@ end)
 end
 
 MainFarm:AddSection({"Chest"})
-
 MainFarm:AddToggle({
   Name = "Auto Chest < Tween >",
   Callback = function(Value)
@@ -6318,7 +5814,7 @@ MainFarm:AddToggle({
 })
 
 MainFarm:AddToggle({
-  Name = "Auto Chest < Bypass >",
+  Name = "Auto Chest < Bypass Risk >",
   Callback = function(Value)
     getgenv().AutoChestBypass = Value
     AutoChestBypass()
@@ -6375,9 +5871,7 @@ MainFarm:AddToggle({
 })
 
 MainFarm:AddSection({"Material"})
-
 local MaterialList = {}
-
 if Sea1 then
   MaterialList = {
     "Angel Wings",
@@ -6422,7 +5916,6 @@ MainFarm:AddToggle({
 })
 
 MainFarm:AddSection({"Mastery"})
-
 MainFarm:AddSlider({
   Name = "Select Health",
   Min = 10,
@@ -6584,31 +6077,20 @@ FruitAndRaid:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().BringFruit then
-
 pcall(function()
-
-
 for i,v in pairs(game:GetService("Workspace"):GetChildren()) do
     if string.find(v.Name, "Fruit") then
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Handle.CFrame
     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Handle,0)
     end
     end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 FruitAndRaid:AddToggle({
@@ -6646,7 +6128,6 @@ local function isWorthFruitInInventory()
         end
         return false
     end
-    
     
     local function isFruitsInInventory()
         for i,v in pairs(LP.Backpack:GetChildren()) do 
@@ -6690,15 +6171,10 @@ local function getFruitWorth(fruitName)
     end
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if _G.HopWhenNoFruits then
-
 pcall(function()
-
 wait(5)
 if not isFruitsOnServer() and _G.HopWhenNoFruits then
                             ServerHop()
@@ -6706,26 +6182,18 @@ if not isFruitsOnServer() and _G.HopWhenNoFruits then
                         if not isWorthFruitInInventory() and not isFruitsInInventory() and not isFruitsOnServer() and _G.HopWhenNoFruits then
                             ServerHop()
                         end
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 FruitAndRaid:AddButton({
 	Name = "Check Stock Normal Dealer",
 	Callback = function()
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
 local Remotes = ReplicatedStorage.Remotes
-
 local result = Remotes.CommF_:InvokeServer("GetFruits")
-
 local fruitsOnSale = {}
 
 local function addCommas(number)
@@ -6746,38 +6214,20 @@ for _, fruitData in pairs(result) do
     end
 end
 
--- Tampilkan daftar buah yang ["OnSale"] = true dengan \n di awal
-
 print("\n" .. table.concat(fruitsOnSale, "\n"))
-
 local gui = Instance.new("ScreenGui")
-
 gui.Parent = game.Players.LocalPlayer.PlayerGui
-
 gui.Name = "MyGUI"
-
 local frame = Instance.new("Frame")
-
 frame.Parent = gui
-
 frame.Size = UDim2.new(0, 200, 0, 300)
-
 frame.Position = UDim2.new(0.1, 0, 0.1, 0)
-
-
 frame.BackgroundColor3 = Color3.new(0, 0, 0)
-
 local textLabel = Instance.new("TextLabel")
-
 textLabel.Parent = frame
-
 textLabel.Size = UDim2.new(1, 0, 1, 0)
-
 textLabel.Text = table.concat(fruitsOnSale, "\n")
-
 textLabel.TextColor3 = Color3.new(1, 1, 1)
-
--- Fungsi untuk menutup GUI
 
 local function closeGUI()
     gui:Destroy()
@@ -6801,29 +6251,19 @@ frame.InputChanged:Connect(function(input)
 
         dragStart = input.Position
     end
-
 end)
 
 frame.InputEnded:Connect(function(input)
-
     if input == dragInput and isDragging then
-
         isDragging = false
-
         frame.CaptureInput = false
-
     end
-
 end)
 
 local closeButton = Instance.new("TextButton")
-
 closeButton.Parent = frame
-
 closeButton.Size = UDim2.new(0, 20, 0, 20)
-
 closeButton.Position = UDim2.new(1, -20, 0, 0)
-
 closeButton.BackgroundColor3 = Color3.new(1, 0, 0)
 closeButton.Text = "X"
 closeButton.MouseButton1Click:Connect(closeGUI)
@@ -6833,13 +6273,9 @@ FruitAndRaid:AddButton({
 	Name = "Check Stock Advanced Dealer",
 	Callback = function()
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
 local Remotes = ReplicatedStorage.Remotes
-
 local Event = Remotes["CommF_"]
-
 local result = Event:InvokeServer("GetFruits", true)
-
 local fruitsOnSale = {}
 
 local function addCommas(number)
@@ -6859,48 +6295,27 @@ for _, fruitData in pairs(result) do
     end
 end
 
--- Tampilkan daftar buah yang ["OnSale"] = true dengan \n di awal
-
 print("\n" .. table.concat(fruitsOnSale, "\n"))
-
 local gui = Instance.new("ScreenGui")
-
 gui.Parent = game.Players.LocalPlayer.PlayerGui
-
 gui.Name = "MyGUI"
-
 local frame = Instance.new("Frame")
-
 frame.Parent = gui
-
 frame.Size = UDim2.new(0, 200, 0, 300)
-
 frame.Position = UDim2.new(0.1, 0, 0.1, 0)
-
 frame.BackgroundColor3 = Color3.new(0, 0, 0)
-
 local textLabel = Instance.new("TextLabel")
-
 textLabel.Parent = frame
-
 textLabel.Size = UDim2.new(1, 0, 1, 0)
-
 textLabel.Text = table.concat(fruitsOnSale, "\n")
-
 textLabel.TextColor3 = Color3.new(1, 1, 1)
-
--- Fungsi untuk menutup GUI
 
 local function closeGUI()
     gui:Destroy()
 end
 
--- Fungsi untuk mengatur drag
-
 local isDragging = false
-
 local dragInput = nil
-
 local dragStart = nil
 
 frame.InputBegan:Connect(function(input)
@@ -6927,21 +6342,12 @@ frame.InputEnded:Connect(function(input)
     end
 end)
 
-
--- Atur tombol tutup
-
 local closeButton = Instance.new("TextButton")
-
 closeButton.Parent = frame
-
 closeButton.Size = UDim2.new(0, 20, 0, 20)
-
 closeButton.Position = UDim2.new(1, -20, 0, 0)
-
 closeButton.BackgroundColor3 = Color3.new(1, 0, 0)
-
 closeButton.Text = "X"
-
 closeButton.MouseButton1Click:Connect(closeGUI)
 	end
 })
@@ -6975,20 +6381,13 @@ if Sea1 then FruitAndRaid:AddParagraph({"Only on Sea 2 and 3"})
 elseif Sea2 or Sea3 then
   Raids_Chip = {}
   local Raids = require(ReplicatedStorage.Raids)
-  
   table.foreach(Raids.advancedRaids, function(a, b)table.insert(Raids_Chip, b)end)
   table.foreach(Raids.raids, function(a, b)table.insert(Raids_Chip, b)end)
-
 local TimeRaid = FruitAndRaid:AddParagraph({"🧭 Waiting For Dungeon"})
-
 local Island1 = FruitAndRaid:AddParagraph({": lsland 1"})
-
 local Island2 = FruitAndRaid:AddParagraph({": lsland 2"})
-
 local Island3 = FruitAndRaid:AddParagraph({": lsland 3"})
-
 local Island4 = FruitAndRaid:AddParagraph({": lsland 4"})
-
 local Island5 = FruitAndRaid:AddParagraph({": lsland 5"})
 
 spawn(function()
@@ -6998,7 +6397,7 @@ spawn(function()
                 if not game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland") then
                     TimeRaid:SetTitle(game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Text)
                 else
-                    TimeRaid:SetTitle("🧭 Waiting For Dungeon")
+                    TimeRaid:SetTitle("?? Waiting For Dungeon")
                 end
                 end
             end
@@ -7175,10 +6574,8 @@ spawn(function()
           end
         end
       end)
-      if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == true then
       getgenv().AutoKillAura = Value
       AutoKillAura()
-      end
     end
   })
 
@@ -7320,7 +6717,6 @@ elseif Sea2 then
   })
   
   QuestsTabs:AddSection({"Bartilo Quest"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Bartilo Quest",
     Callback = function(Value)
@@ -7330,7 +6726,6 @@ elseif Sea2 then
   })
   
   QuestsTabs:AddSection({"Rengoku"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Rengoku",
     Callback = function(Value)
@@ -7398,15 +6793,10 @@ end)
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EvoV3 then
-
 pcall(function()
-
 task.spawn(function()
     while getgenv().EvoV3 do task.wait()
       QuestProgress = FireRemote("Wenlocktoad", "1")
@@ -7492,16 +6882,10 @@ game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","
           end      
           end
           end
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 function getCheapestFruit()
@@ -7555,7 +6939,6 @@ QuestsTabs:AddSection({"Get Race"})
   })
   
   QuestsTabs:AddSection({"Cursed Captain"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Cursed Captain",
     Callback = function(Value)
@@ -7565,7 +6948,6 @@ QuestsTabs:AddSection({"Get Race"})
   })
   
   QuestsTabs:AddSection({"Dark Beard"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Dark Beard",
     Callback = function(Value)
@@ -7575,7 +6957,6 @@ QuestsTabs:AddSection({"Get Race"})
   })
   
   QuestsTabs:AddSection({"Law"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Buy Law Chip",
     Callback = function(Value)
@@ -7630,13 +7011,11 @@ elseif Sea3 then
     end
   end)
   
-  if not IsOwner then
     task.spawn(function()
       while task.wait(1) do
         LabelElit3:SetTitle("Elite Hunter Progress : " .. FireRemote("EliteHunter", "Progress"))
       end
     end)
-  end
   
   table.insert(AFKOptions, QuestsTabs:AddToggle({
     Name = "Auto Elite Hunter",
@@ -7655,7 +7034,7 @@ QuestsTabs:AddToggle({
 })
 spawn(function()
         pcall(function()
-            while wait(.1) do
+            while wait() do
                 if getgenv().AutoPlayerHunter then
                     if game:GetService("Players").LocalPlayer.PlayerGui.Main.PvpDisabled.Visible == true then
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EnablePvp")
@@ -7668,22 +7047,12 @@ spawn(function()
 		while wait() do
 			if getgenv().AutoPlayerHunter then
 				if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
-					wait(.5)
 					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")
 				else
 					for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
 						if string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text,v.Name) then
-							repeat wait()	pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-								game:GetService("VirtualInputManager"):SendKeyEvent(true,"Z",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"Z",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"X",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"X",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"C",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"C",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,"V",false,game)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,"V",false,game)
-								PlayerTP(v.HumanoidRootPart.CFrame * CFrame.new(1,7,3))								
-								v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+							repeat wait()pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
+								PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)
 							until getgenv().AutoPlayerHunter == false or v.Humanoid.Health <= 0
 							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
 						end
@@ -7718,9 +7087,7 @@ spawn(function()
   })
   
   QuestsTabs:AddSection({"Tushita"})
-  
   local LabelRipIndra = QuestsTabs:AddParagraph({"Rip Indra Stats : Not Spawned"})
-  
   task.spawn(function()
     while task.wait(0.5) do
       if VerifyNPC("rip_indra True Form") then
@@ -7748,8 +7115,7 @@ spawn(function()
         
         while getgenv().AutoTushita do task.wait()
           if not Turtle:FindFirstChild("TushitaGate") then
-            local Enemie = Enemies:FindFirstChild("Longma")
-            
+            local Enemie = Enemies:FindFirstChild("Longma")          
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
               PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
               pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -7764,8 +7130,7 @@ spawn(function()
               local Torch2 = QuestTorches:FindFirstChild("Torch2")
               local Torch3 = QuestTorches:FindFirstChild("Torch3")
               local Torch4 = QuestTorches:FindFirstChild("Torch4")
-              local Torch5 = QuestTorches:FindFirstChild("Torch5")
-              
+              local Torch5 = QuestTorches:FindFirstChild("Torch5")           
               local args1 = Torch1 and Torch1:FindFirstChild("Particles")
               and Torch1.Particles:FindFirstChild("PointLight") and not Torch1.Particles.PointLight.Enabled
               local args2 = Torch2 and Torch2:FindFirstChild("Particles")
@@ -7775,8 +7140,7 @@ spawn(function()
               local args4 = Torch4 and Torch4:FindFirstChild("Particles")
               and Torch4.Particles:FindFirstChild("PointLight") and not Torch4.Particles.PointLight.Enabled
               local args5 = Torch5 and Torch5:FindFirstChild("Particles")
-              and Torch5.Particles:FindFirstChild("PointLight") and not Torch5.Particles.PointLight.Enabled
-              
+              and Torch5.Particles:FindFirstChild("PointLight") and not Torch5.Particles.PointLight.Enabled          
               if not Active1 and args1 then
                 PlayerTP(Torch1.CFrame)
               elseif not Active2 and args2 then
@@ -7796,8 +7160,7 @@ spawn(function()
               EquipToolName("God's Chalice")
               PlayerTP(CFrame.new(-5561, 314, -2663))
             else
-              local NPC = "EliteBossVerify"QuestVisible()
-              
+              local NPC = "EliteBossVerify"QuestVisible()          
               if VerifyQuest("Diablo") then
                 NPC = "Diablo"
               elseif VerifyQuest("Deandre") then
@@ -7806,10 +7169,8 @@ spawn(function()
                 NPC = "Urban"
               else
                 task.spawn(function()FireRemote("EliteHunter")end)
-              end
-              
-              local EliteBoss = GetEnemies({NPC})
-              
+              end              
+              local EliteBoss = GetEnemies({NPC})          
               if EliteBoss and EliteBoss:FindFirstChild("HumanoidRootPart") then
                 PlayerTP(EliteBoss.HumanoidRootPart.CFrame + getgenv().FarmPos)
                 pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
@@ -7833,10 +7194,7 @@ spawn(function()
   })
   
   QuestsTabs:AddSection({"Cake Prince + Dough King"}) 
-  
   local CakeLabel = QuestsTabs:AddParagraph({"Stats : 0"})
-  
-  if not IsOwner then
     task.spawn(function()
       while task.wait(1) do
         if VerifyNPC("Dough King") then
@@ -7849,7 +7207,6 @@ spawn(function()
         end
       end
     end)
-  end
   
   local CakePrinceToggle = QuestsTabs:AddToggle({"Auto Cake Prince", false, function(Value)
     getgenv().AutoCakePrince = Value
@@ -7884,7 +7241,6 @@ local ActiveButtonToggle = QuestsTabs:AddToggle({"Auto Active Button Haki Color"
         end
       end
     end)
-    
     task.spawn(function()
       while getgenv().RipIndraLegendaryHaki do task.wait()
         if not getgenv().AutoFarm_Level and not getgenv().AutoFarmBone and not getgenv().AutoCakePrince then
@@ -7897,14 +7253,12 @@ local ActiveButtonToggle = QuestsTabs:AddToggle({"Auto Active Button Haki Color"
       end
     end)
   end})
-  
   RipIndraToggle:Callback(function()ActiveButtonToggle:Set(false)end)
   ActiveButtonToggle:Callback(function()RipIndraToggle:Set(false)end)
 end
 
 if Sea2 or Sea3 then
   QuestsTabs:AddSection({"Fighting Style"})
-  
   QuestsTabs:AddToggle({
     Name = "Auto Death Step",
     Callback = function(Value)
@@ -7912,7 +7266,6 @@ if Sea2 or Sea3 then
       task.spawn(function()
         local MasteryBlackLeg = 0
         local KeyFind = false
-        
         local function GetProxyNPC()
           local Distance = math.huge
           local NPC = nil
@@ -7928,25 +7281,20 @@ if Sea2 or Sea3 then
           end
           return NPC
         end
-        
         while getgenv().AutoDeathStep do task.wait()
           if VerifyTool("Black Leg") then
             MasteryBlackLeg = GetToolLevel("Black Leg")
           end
-          
           if MasteryBlackLeg >= 400 and Sea3 then
             FireRemote("TravelDressrosa")
           end
-            
           if KeyFind then
             FireRemote("BuyDeathStep")
           end
-          
           if VerifyTool("Death Step") then
             EquipToolName("Death Step")
           elseif MasteryBlackLeg >= 400 then
             local Enemie = Enemies:FindFirstChild("Awakened Ice Admiral")
-            
             if VerifyTool("Library Key") then
               KeyFind = true
               EquipToolName("Library Key")
@@ -7961,9 +7309,7 @@ if Sea2 or Sea3 then
             FireRemote("BuyBlackLeg")
           elseif VerifyTool("Black Leg") and MasteryBlackLeg < 400 then
             EquipToolName("Black Leg")
-            
             local Enemie = GetProxyNPC()
-            
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
             if Sea3 then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -8002,7 +7348,6 @@ end
           local Distance = math.huge
           local NPC = nil
           local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-          
           for _,npc in pairs(Enemies:GetChildren()) do
             if npc.Name == "Reborn Skeleton" or npc.Name == "Living Zombie" or npc.Name == "Demonic Soul" or npc.Name == "Posessed Mummy" or npc.Name == "Water Fighter" then
               if plrChar and npc and npc:FindFirstChild("HumanoidRootPart") and (plrChar.Position - npc.HumanoidRootPart.Position).Magnitude <= Distance then
@@ -8013,14 +7358,12 @@ end
           end
           return NPC
         end
-        
         while getgenv().AutoElectricClaw do task.wait()
           if VerifyTool("Electro") then
             MasteryElectro = GetToolLevel("Electro")
           elseif VerifyTool("Electric Claw") then
             MasteryElectricClaw = GetToolLevel("Electric Claw")
-          end
-          
+          end  
           if MasteryElectro < 400 then
             if not VerifyTool("Electro") then
               FireRemote("BuyElectro")
@@ -8034,9 +7377,7 @@ end
               EquipToolName("Electric Claw")
             end
           end
-          
           local Enemie = GetProxyNPC()
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           if Sea3 then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -8070,26 +7411,22 @@ end
         local MasteryFishmanKarate = 0
         local MasterySharkmanKarate = 0
         local SharkmanStats = 0
-        
         task.spawn(function()
           while getgenv().AutoSharkmanKarate do task.wait()
             SharkmanStats = FireRemote("BuySharkmanKarate", true)
           end
         end)
-        
         while getgenv().AutoSharkmanKarate do task.wait()
           if VerifyTool("Fishman Karate") then
             MasteryFishmanKarate = GetToolLevel("Fishman Karate")
           elseif VerifyTool("Sharkman Karate") then
             MasterySharkmanKarate = GetToolLevel("Sharkman Karate")
           end
-          
           if SharkmanStats == 1 then
             FireRemote("BuySharkmanKarate")
           elseif VerifyTool("Sharkman Karate") then
             EquipToolName("Sharkman Karate")
             local Enemie = Enemies:FindFirstChild("Water Fighter")
-            
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
               PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
               pcall(function()PlayerClick()ActiveHaki()BringNPC(Enemie, true)end)
@@ -8100,7 +7437,6 @@ end
             FireRemote("BuySharkmanKarate", true)
           elseif not VerifyTool("Water Key") and MasteryFishmanKarate >= 400 then
             local Enemie = Enemies:FindFirstChild("Water Fighter")
-            
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
               PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
               pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
@@ -8112,7 +7448,6 @@ end
           elseif VerifyTool("Fishman Karate") and MasteryFishmanKarate < 400 then
             EquipToolName("Fishman Karate")
             local Enemie = Enemies:FindFirstChild("Water Fighter")
-          
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
 if Sea2 then
 if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -8153,7 +7488,6 @@ end
           end
           return NPC
         end
-        
         task.spawn(function()
           while getgenv().AutoDragonTalon do task.wait()
             if not VerifyTool("Fire Essence") then
@@ -8164,16 +7498,13 @@ end
             end
           end
         end)
-        
         while getgenv().AutoDragonTalon do task.wait()
           if VerifyTool("Dragon Claw") then
             MasteryDragonClaw = GetToolLevel("Dragon Claw")
           end
-          
           if MasteryDragonClaw >= 400 and Sea2 then
             FireRemote("TravelZou")
           end
-          
           if FireEssence and MasteryDragonClaw >= 400 then
             FireRemote("BuyDragonTalon")
           elseif not VerifyTool("Dragon Claw") and MasteryDragonClaw < 400 or not FireEssence and not VerifyTool("Dragon Claw") then
@@ -8183,7 +7514,6 @@ end
             EquipToolName("Dragon Claw")
             
             local Enemie = GetProxyNPC()
-            
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
             if Sea3 then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -8225,7 +7555,6 @@ end
           local Distance = math.huge
           local NPC = nil
           local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-          
           for _,npc in pairs(Enemies:GetChildren()) do
             if npc.Name == "Reborn Skeleton" or npc.Name == "Living Zombie" or npc.Name == "Demonic Soul" or npc.Name == "Posessed Mummy" or npc.Name == "Water Fighter" then
               if plrChar and npc and npc:FindFirstChild("HumanoidRootPart") and (plrChar.Position - npc.HumanoidRootPart.Position).Magnitude <= Distance then
@@ -8236,7 +7565,6 @@ end
           end
           return NPC
         end
-        
         while getgenv().AutoSuperhuman do task.wait()
           if VerifyTool("Black Leg") then
             MasteryBlackLeg = GetToolLevel("Black Leg")
@@ -8249,7 +7577,6 @@ end
           elseif VerifyTool("Superhuman") then
             MasterySuperhuman = GetToolLevel("Superhuman")
           end
-          
           if MasteryBlackLeg < 300 then
             if not VerifyTool("Black Leg") then
               FireRemote("BuyBlackLeg")
@@ -8282,9 +7609,7 @@ end
               EquipToolName("Superhuman")
             end
           end
-          
           local Enemie = GetProxyNPC()
-          
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
           if Sea3 then
           if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
@@ -8320,7 +7645,6 @@ if Sea3 then
           local Distance = math.huge
           local NPC = nil
           local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-          
           for _,npc in pairs(Enemies:GetChildren()) do
             if npc.Name == "Reborn Skeleton" or npc.Name == "Living Zombie" or npc.Name == "Demonic Soul" or npc.Name == "Posessed Mummy" then
               if plrChar and npc and npc:FindFirstChild("HumanoidRootPart") and (plrChar.Position - npc.HumanoidRootPart.Position).Magnitude <= Distance then
@@ -8349,8 +7673,7 @@ if Sea3 then
         while getgenv().AutoGodHuman do task.wait()
           if Sea2 then
             FireRemote("TravelZou")
-          end
-          
+          end  
           if VerifyTool("Black Leg") then
             MasteryBlackLeg = GetToolLevel("Black Leg")
           elseif VerifyTool("Electro") then
@@ -8371,8 +7694,7 @@ if Sea3 then
             MasteryDragonTalon = GetToolLevel("Dragon Talon")
           elseif VerifyTool("Godhuman") then
             MasteryGodHuman = GetToolLevel("Godhuman")
-          end
-          
+          end        
           if MasteryBlackLeg < 400 then
             if not VerifyTool("Black Leg") then
               BuyFightStyle("BuyBlackLeg")
@@ -8436,8 +7758,7 @@ if Sea3 then
             end
           end
           
-          local Enemie = GetProxyNPC()
-          
+          local Enemie = GetProxyNPC()      
           if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "HauntedQuest2", 2)
@@ -8456,7 +7777,6 @@ end
 
 if Sea3 then
   QuestsTabs:AddSection({"Auto Mastery All"})
-  
   QuestsTabs:AddSlider({
     Name = "Select Mastery",
     Min = 100,
@@ -8507,8 +7827,7 @@ if Sea3 then
         local MasterySanguineArt = 0
         
         while getgenv().AutoMasteryFightingStyle do task.wait()
-          local MaxMastery = getgenv().AutoMasteryValue
-          
+          local MaxMastery = getgenv().AutoMasteryValue  
           if VerifyTool("Black Leg") then
             MasteryBlackLeg = GetToolLevel("Black Leg")
           elseif VerifyTool("Electro") then
@@ -8532,7 +7851,6 @@ if Sea3 then
           elseif VerifyTool("Sanguine Art") then
             MasterySanguineArt = GetToolLevel("Sanguine Art")
           end
-          
           if MasteryBlackLeg < MaxMastery then
             if not VerifyTool("Black Leg") then
               BuyFightStyle("BuyBlackLeg")
@@ -8600,11 +7918,9 @@ if Sea3 then
             else
               EquipToolName("Sanguine Art")
             end
-          end
-          
+          end     
           if not getgenv().AutoFarm_Level and not getgenv().AutoFarmBone and not getgenv().AutoFarmEctoplasm then
             local Enemie = GetProxyNPC()
-         
             if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "HauntedQuest2", 2)
@@ -8747,15 +8063,10 @@ QuestsTabs:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().Aren then
-
 pcall(function()
-
 if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ArenaTrainer")
 end
@@ -8764,7 +8075,7 @@ for i, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
 								if v.Name == "Training Dummy" then
 									if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
 pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-PlayerTP(v.HumanoidRootPart.CFrame)
+PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)
 end
 end
 end
@@ -8772,18 +8083,12 @@ if not game.Workspace.Enemies:FindFirstChild("Training Dummy") then
 PlayerTP(CFrame.new(3758, 92, 254))
 end
 end
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
-  end
+end
 
 if Sea3 or Sea2 then
 QuestsTabs:AddSection({"Haki Color"})
@@ -9091,16 +8396,10 @@ Misc:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EnableKen then
-
 pcall(function()
-
-
 if
                                 game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui") and
                                     game.Players.LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
@@ -9112,16 +8411,10 @@ if
                                 wait(2)
                                 game:service("VirtualUser"):SetKeyUp("0x65")
                             end
-
-
- end)
-
-end
-
-end
-
 end)
-
+end
+end
+end)
 end)
 
 Misc:AddToggle({
@@ -9133,28 +8426,15 @@ Misc:AddToggle({
 })
 
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EnableV3 then
-
 pcall(function()
-
-
 game:GetService("ReplicatedStorage").Remotes.CommE:FireServer("ActivateAbility")
-
-
-
- end)
-
-end
-
-end
-
 end)
-
+end
+end
+end)
 end)
 
 Misc:AddToggle({
@@ -9164,34 +8444,20 @@ Misc:AddToggle({
 		getgenv().EnableV4 = Value
 	end
 })
-
 spawn(function()
-
 pcall(function()
-
 while wait() do
-
 if getgenv().EnableV4 then
-
 pcall(function()
-
-
 local args = {
     [1] = true
 }
 
 game:GetService("Players").LocalPlayer.Backpack.Awakening.RemoteFunction:InvokeServer(unpack(args))
-
-
-
  end)
-
 end
-
 end
-
 end)
-
 end)
 
 Misc:AddSection({"Codes"})
@@ -9404,7 +8670,6 @@ table.insert(AFKOptions, Misc:AddToggle({"Remove Notifications", false, function
 end, "Misc/RemoveNotifications"}))
 
 Misc:AddSection({"Others"})
-
 Misc:AddToggle({"Walk On Water", true, function(Value)
   getgenv().WalkOnWater = Value
   task.spawn(function()
@@ -9590,7 +8855,6 @@ local function StartDialog(DialogName)
     end
   end
 end
-
 StartDialog(getgenv().Dialog)
 	end
 })
@@ -9608,7 +8872,6 @@ require(game:GetService("ReplicatedStorage").Notification).new("Mink V4!"):Displ
  wait()
  setthreadcontext(5)
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
@@ -9619,7 +8882,6 @@ require(game:GetService("ReplicatedStorage").Notification).new("Mink V4!"):Displ
  }
  Player.Character.Humanoid:LoadAnimation(ReplicatedStorage.Util.Anims.Storage["2"].RaceTransform):Play()
  delay(1, function()
-
   pcall(function() require(ReplicatedStorage.Effect.Container.RaceTransformation.Main)(ArgsTransform) end)
   end)
 	end
@@ -9628,15 +8890,10 @@ Visual:AddButton({
 	Name = "Fishman Fake Transform",
 	Callback = function()
 require(game:GetService("ReplicatedStorage").Notification).new("Fishman V4!"):Display();
-
  wait()
-
  setthreadcontext(5)
-
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
-
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
   CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
@@ -9654,15 +8911,10 @@ Visual:AddButton({
 	Name = "Skypeian Fake Transform",
 	Callback = function()
 require(game:GetService("ReplicatedStorage").Notification).new("Skypeian V4!"):Display();
-
  wait()
-
  setthreadcontext(5)
-
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
-
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
   CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
@@ -9670,11 +8922,8 @@ require(game:GetService("ReplicatedStorage").Notification).new("Skypeian V4!"):D
   Color2 = Color3.fromRGB(222, 222, 0),
   Color3 = Color3.fromRGB(222, 222, 0),
  }
-
  Player.Character.Humanoid:LoadAnimation(ReplicatedStorage.Util.Anims.Storage["2"].RaceTransform):Play()
-
  delay(1, function()
-
   pcall(function() require(ReplicatedStorage.Effect.Container.RaceTransformation.Main)(ArgsTransform) end)
   end)
 	end
@@ -9683,15 +8932,10 @@ Visual:AddButton({
 	Name = "Ghoul Fake Transform",
 	Callback = function()
 require(game:GetService("ReplicatedStorage").Notification).new("Ghoul V4!"):Display();
-
  wait()
-
  setthreadcontext(5)
-
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
-
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
   CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
@@ -9709,15 +8953,10 @@ Visual:AddButton({
 	Name = "Cyborg Fake Transform",
 	Callback = function()
 require(game:GetService("ReplicatedStorage").Notification).new("Cyborg V4!"):Display();
-
  wait()
-
  setthreadcontext(5)
-
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
-
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
   CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
@@ -9726,9 +8965,7 @@ require(game:GetService("ReplicatedStorage").Notification).new("Cyborg V4!"):Dis
   Color3 = Color3.fromRGB(166, 0, 111),
  }
  Player.Character.Humanoid:LoadAnimation(ReplicatedStorage.Util.Anims.Storage["2"].RaceTransform):Play()
-
  delay(1, function()
-
   pcall(function() require(ReplicatedStorage.Effect.Container.RaceTransformation.Main)(ArgsTransform) end)
   end)
 	end
@@ -9737,15 +8974,10 @@ Visual:AddButton({
 	Name = "Human Fake Transform",
 	Callback = function()
 require(game:GetService("ReplicatedStorage").Notification).new("Human V4!"):Display();
-
  wait()
-
  setthreadcontext(5)
-
  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
  local Player = game:GetService("Players").LocalPlayer
-
  local ArgsTransform = {
   Character = game.Players.LocalPlayer.Character,
   CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
@@ -9753,11 +8985,8 @@ require(game:GetService("ReplicatedStorage").Notification).new("Human V4!"):Disp
   Color2 = Color3.fromRGB(166, 0, 0),
   Color3 = Color3.fromRGB(166, 0, 0),
  }
-
  Player.Character.Humanoid:LoadAnimation(ReplicatedStorage.Util.Anims.Storage["2"].RaceTransform):Play()
-
  delay(1, function()
-
   pcall(function() require(ReplicatedStorage.Effect.Container.RaceTransformation.Main)(ArgsTransform) end)
   end)
 	end
@@ -9812,10 +9041,8 @@ end})
 
 task.spawn(function()
   local EffectContainer = ReplicatedStorage:WaitForChild("Effect", 9e9):WaitForChild("Container", 9e9)
-  
   RunService.RenderStepped:Connect(function()
     local DeathEffect = EffectContainer:FindFirstChild("Death")
-    
     if DeathEffect then
       DeathEffect:Destroy()
     end
@@ -9824,30 +9051,6 @@ task.spawn(function()
   hookfunction(error, function()end)
   hookfunction(warn, function()end)
 end)
-
-_G.ResetFlags = true
-spawn(function()
-	while wait() do
-		pcall(function()
-			if _G.ResetFlags then
-				for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
-					if v:IsA("LocalScript") then
-						if v.Name == "General" or v.Name == "Shiftlock" or v.Name == "FallDamage" or v.Name == "4444" or v.Name == "CamBob" or v.Name == "JumpCD" or v.Name == "Looking" or v.Name == "Run" then
-							v:Destroy();
-						end;
-					end;
-				end;
-				for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts:GetDescendants()) do
-					if v:IsA("LocalScript") then
-						if v.Name == "RobloxMotor6DBugFix" or v.Name == "Clans" or v.Name == "Codes" or v.Name == "CustomForceField" or v.Name == "MenuBloodSp" or v.Name == "PlayerList" then
-							v:Destroy();
-						end;
-					end;
-				end;
-			end;
-		end);
-	end;
-end);
 
 task.spawn(function()
 	Fluent:Notify({
