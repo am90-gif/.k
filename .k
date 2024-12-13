@@ -108,7 +108,8 @@ task.spawn(function()
       or getgenv().AutoGhoulRace
       or getgenv().UpAutoObservation
       or getgenv().TalkStone
-      or getgenv().DoorRace then
+      or getgenv().DoorRace
+      or getgenv().AutoTrainRace then
         getgenv().OnFarm = true
       else
         getgenv().OnFarm = false
@@ -5133,11 +5134,9 @@ pcall(function()
 if game:GetService("Workspace").Map["Temple of Time"].FFABorder.Forcefield.Transparency < 1 then
 			if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true then
 			for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
-			    if v.Name ~= game.Players.LocalPlayer.Name and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150 then
-			        if v.Humanoid.Health > 0 then
+			    if v.Name ~= game.Players.LocalPlayer.Name and v.Humanoid.Health > 0 and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150 then
 			              pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
 			                PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)
-			end
 			end
 			end
 			end
@@ -5174,6 +5173,53 @@ end
 end
 end)
 end)
+
+MirageTab:AddToggle({
+	Name = "Auto Train Race",
+	Default = false,
+	Callback = function(Value)
+		getgenv().AutoTrainRace = Value
+	end
+})
+
+spawn(function()
+        pcall(function()
+            while wait() do
+                if getgenv().AutoTrainRace then
+                if game.Players.LocalPlayer.Character:FindFirstChild("RaceTransformed") then
+if game.Players.LocalPlayer.Character.RaceTransformed.Value == true then
+local args = {
+    [1] = "UpgradeRace",
+    [2] = "Buy"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+PlayerTP(CFrame.new(-9513, 164, 5786))
+end
+end
+                    if game.Players.LocalPlayer.Character:FindFirstChild("RaceTransformed") then
+if game.Players.LocalPlayer.Character.RaceTransformed.Value == false then
+      local Enemie = GetEnemies({"Reborn Skeleton", "Living Zombie", "Demonic Soul", "Posessed Mummy"})
+      if Enemie then
+      if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
+game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", "HauntedQuest2", 2)
+end
+        PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
+        pcall(function()PlayerClick()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
+        local args = {
+    [1] = true
+}
+
+game:GetService("Players").LocalPlayer.Backpack.Awakening.RemoteFunction:InvokeServer(unpack(args))
+      else
+        PlayerTP(CFrame.new(-9513, 164, 5786))
+        end
+        end
+        end
+                end
+            end
+        end)
+    end)
 
 MirageTab:AddToggle({
 	Name = "Auto Buy Gear",
