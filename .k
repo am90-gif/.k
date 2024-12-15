@@ -637,219 +637,58 @@ local function EspChests()
   end
 end
 
-local CameraShaker = require(ReplicatedStorage.Util.CameraShaker)
-CameraShaker:Stop()
-function GetBladeHit()
-  local CombatFrameworkLib = debug.getupvalues(require(Player.PlayerScripts.CombatFramework))
-  local CmrFwLib = CombatFrameworkLib[2]
-  local p13 = CmrFwLib.activeController
-  local weapon = p13.blades[1]
-  if not weapon then 
-    return weapon
-  end
-  while weapon.Parent ~= Player.Character do task.wait()
-    weapon = weapon.Parent
-  end
-  return weapon
-end
+local Net = game:GetService("ReplicatedStorage").Modules.Net
 
-function AttackHit()
-  local CombatFrameworkLib = debug.getupvalues(require(Player.PlayerScripts.CombatFramework))
-  local CmrFwLib = CombatFrameworkLib[2]
-  for i = 1, 1 do
-    local bladehit = require(ReplicatedStorage.CombatFramework.RigLib).getBladeHits(Player.Character, {
-      Player.Character.HumanoidRootPart
-    }, 60)
-    local cac = {}
-    local hash = {}
-    for _,v in pairs(bladehit) do
-      if v.Parent:FindFirstChild("HumanoidRootPart") and not hash[v.Parent] then
-        table.insert(cac, v.Parent.HumanoidRootPart)
-        hash[v.Parent] = true
-      end
-    end
-    bladehit = cac
-    if #bladehit > 0 then
-      pcall(function()
-        ReplicatedStorage.RigControllerEvent:FireServer("weaponChange", tostring(GetBladeHit()))
-        ReplicatedStorage.RigControllerEvent:FireServer("hit", bladehit, i, "")
-      end)
+local RegisterAttack = Net:WaitForChild("RE/RegisterAttack")
+local RegisterHit = Net:WaitForChild("RE/RegisterHit")
+
+local Characters = workspace.Characters
+local Enemies = workspace.Enemies
+
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+
+local module = {
+  NextAttack = 0,
+  Distance = 55,
+  attackMobs = true,
+  attackPlayers = true
+}
+
+function module:GetBladeHits()
+  local BladeHits = {}
+  
+  local Character = Player.Character
+  
+  for _, Enemy in Characters:GetChildren() do
+    if Enemy ~= Character and Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
+      table.insert(BladeHits, Enemy:FindFirstChild("Head"))
     end
   end
-end
-
-local function AttackDistance()
-  while getgenv().AttackDistance do task.wait()
-    pcall(function()
-      local CF = debug.getupvalues(require(Player.PlayerScripts.CombatFramework))[2]
-      local AC = CF.activeController
-      if AC.hitboxMagnitude ~= 60 then AC.hitboxMagnitude = 60 end
-    end)
-  end
-end
-
-local CombatFramework = require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework"))
-local CombatFrameworkR = getupvalues(CombatFramework)[2]
-local RigController = require(game:GetService("Players")["LocalPlayer"].PlayerScripts.CombatFramework.RigController)
-local RigControllerR = getupvalues(RigController)[2]
-local realbhit = require(game.ReplicatedStorage.CombatFramework.RigLib)
-local cooldownfastattack = tick()
-
-function CameraShaker()
-task.spawn(function()
-  local Camera = require(game.Players.LocalPlayer.PlayerScripts.CombatFramework.CameraShaker)
-  while wait() do
-  pcall(function()
-    if _G.Settings.Configs["Camera Shaker"] then
-    Camera.CameraShakeInstance.CameraShakeState.Inactive = 0
-    else
-      Camera.CameraShakeInstance.CameraShakeState.Inactive = 3
+  for _, Enemy in Enemies:GetChildren() do
+    if Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
+      table.insert(BladeHits, Enemy:FindFirstChild("Head"))
     end
-    end)
   end
-  end)
+  
+  return BladeHits
 end
 
-function CurrentWeapon()
-local ac = CombatFrameworkR.activeController
-local ret = ac.blades[1]
-if not ret then return game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Name end
-pcall(function()
-  while ret.Parent ~= game.Players.LocalPlayer.Character do ret = ret.Parent end
-  end)
-if not ret then return game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Name end
-return ret
-end
-
-function getAllBladeHitsPlayers(Sizes)
-local Hits = {}
-local Client = game.Players.LocalPlayer
-local Characters = game:GetService("Workspace").Characters:GetChildren()
-for i = 1,#Characters do local v = Characters[i]
-local Human = v:FindFirstChildOfClass("Humanoid")
-if v.Name ~= game.Players.LocalPlayer.Name and Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes+5 then
-table.insert(Hits,Human.RootPart)
-end
-end
-return Hits
-end
-
-function getAllBladeHits(Sizes)
-local Hits = {}
-local Client = game.Players.LocalPlayer
-local Enemies = game:GetService("Workspace").Enemies:GetChildren()
-for i = 1,#Enemies do local v = Enemies[i]
-local Human = v:FindFirstChildOfClass("Humanoid")
-if Human and Human.RootPart and Human.Health > 0 and Client:DistanceFromCharacter(Human.RootPart.Position) < Sizes+5 then
-table.insert(Hits,Human.RootPart)
-end
-end
-return Hits
-end
-
-function AttackFunction()
-local ac = CombatFrameworkR.activeController
-if ac and ac.equipped then
-for indexincrement = 1, 1 do
-local bladehit = getAllBladeHits(60)
-if #bladehit > 0 then
-local AcAttack8 = debug.getupvalue(ac.attack, 5)
-local AcAttack9 = debug.getupvalue(ac.attack, 6)
-local AcAttack7 = debug.getupvalue(ac.attack, 4)
-local AcAttack10 = debug.getupvalue(ac.attack, 7)
-local NumberAc12 = (AcAttack8 * 798405 + AcAttack7 * 727595) % AcAttack9
-local NumberAc13 = AcAttack7 * 798405
-(function()
-  NumberAc12 = (NumberAc12 * AcAttack9 + NumberAc13) % 1099511627776
-  AcAttack8 = math.floor(NumberAc12 / AcAttack9)
-  AcAttack7 = NumberAc12 - AcAttack8 * AcAttack9
-  end)()
-AcAttack10 = AcAttack10 + 1
-debug.setupvalue(ac.attack, 5, AcAttack8)
-debug.setupvalue(ac.attack, 6, AcAttack9)
-debug.setupvalue(ac.attack, 4, AcAttack7)
-debug.setupvalue(ac.attack, 7, AcAttack10)
-for k, v in pairs(ac.animator.anims.basic) do
-v:Play(0.01,0.01,0.01)
-end
-if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and ac.blades and ac.blades[1] then
-game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(CurrentWeapon()))
-game.ReplicatedStorage.Remotes.Validator:FireServer(math.floor(NumberAc12 / 1099511627776 * 16777215), AcAttack10)
-game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", bladehit, 2, "")
-end
-end
-end
-end
-end
-
-function AttackPlayers()
-local ac = CombatFrameworkR.activeController
-if ac and ac.equipped then
-for indexincrement = 1, 1 do
-local bladehit = getAllBladeHitsPlayers(60)
-if #bladehit > 0 then
-local AcAttack8 = debug.getupvalue(ac.attack, 5)
-local AcAttack9 = debug.getupvalue(ac.attack, 6)
-local AcAttack7 = debug.getupvalue(ac.attack, 4)
-local AcAttack10 = debug.getupvalue(ac.attack, 7)
-local NumberAc12 = (AcAttack8 * 798405 + AcAttack7 * 727595) % AcAttack9
-local NumberAc13 = AcAttack7 * 798405
-(function()
-  NumberAc12 = (NumberAc12 * AcAttack9 + NumberAc13) % 1099511627776
-  AcAttack8 = math.floor(NumberAc12 / AcAttack9)
-  AcAttack7 = NumberAc12 - AcAttack8 * AcAttack9
-  end)()
-AcAttack10 = AcAttack10 + 1
-debug.setupvalue(ac.attack, 5, AcAttack8)
-debug.setupvalue(ac.attack, 6, AcAttack9)
-debug.setupvalue(ac.attack, 4, AcAttack7)
-debug.setupvalue(ac.attack, 7, AcAttack10)
-for k, v in pairs(ac.animator.anims.basic) do
-v:Play(0.01,0.01,0.01)
-end
-if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and ac.blades and ac.blades[1] then
-game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(CurrentWeapon()))
-game.ReplicatedStorage.Remotes.Validator:FireServer(math.floor(NumberAc12 / 1099511627776 * 16777215), AcAttack10)
-game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", bladehit, 2, "")
-end
-end
-end
-end
-end
-
-coroutine.wrap(function()
-  while task.wait(.1) do
-  local ac = CombatFrameworkR.activeController
-  if ac and ac.equipped then
-  if getgenv().FastAttack then
-  if getgenv().FastAttackMethod == "Normal" then
-  if tick() - cooldownfastattack > .9 then wait(.1) cooldownfastattack = tick() end
-  elseif getgenv().FastAttackMethod == "Fast" then
-  if tick() - cooldownfastattack > 1.5 then wait(.01) cooldownfastattack = tick() end
-  elseif getgenv().FastAttackMethod == "Slow" then
-  if tick() - cooldownfastattack > .3 then wait(.7) cooldownfastattack = tick() end
+function module:attack()
+  local BladeHits = self:GetBladeHits()
+  
+  RegisterAttack:FireServer(0)
+  
+  for _, Hit in BladeHits do
+    RegisterHit:FireServer(Hit)
   end
-  elseif getgenv().FastAttack == false then
-  if ac.hitboxMagnitude ~= 55 then
-  ac.hitboxMagnitude = 55
-  end
-  ac:attack()
-  end
-  end
-  end
-  end)()
+end
 
-local time = tick()
 local function PlayerClick()
-  local plrPP = Player.Character and Player.Character.PrimaryPart
-  if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude > 25 then return end
-  if getgenv().FastAttack and (tick() - time) >= getgenv().AutoClickDelay then
-    task.spawn(function()
-AttackFunction()
-AttackPlayers()
-    end)
-    time = tick()
-  end
+local plrPP = Player.Character and Player.Character.PrimaryPart
+  if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude < 25 then
+module:attack()
+end
 end
 
 local function ServerHop()
@@ -1511,9 +1350,15 @@ local function Get_LevelQuest()
     elseif Level >= 2500 and Level < 2525 then
       Quest = {CFrame.new(-16540, 56, 1051), false, "Sun-kissed Warrior", "TikiQuest2", 1}
       QuestTween = {CFrame.new(-16345, 80, 1004), CFrame.new(-16425, 77, 1059), CFrame.new(-16069, 37, 1029)}
-    elseif Level >= 2525 then
+    elseif Level >= 2525 and Level < 2550 then
       Quest = {CFrame.new(-16540, 56, 1051), false, "Isle Champion", "TikiQuest2", 2}
       QuestTween = {CFrame.new(-16634, 85, 1106), CFrame.new(-16735, 60, 1075), CFrame.new(-16888, 35, 1011)}
+    elseif Level >= 2550 and Level < 2575 then
+    Quest = {CFrame.new(-16666, 105, 1577), false, "Serpent Hunter", "TikiQuest3", 1}
+      QuestTween = {CFrame.new(-16666, 105, 1577), CFrame.new(-16666, 105, 1577), CFrame.new(-16666, 105, 1577)}
+     elseif Level >= 2575 and Level < 2700 then
+    Quest = {CFrame.new(-16666, 105, 1577), false, "Skull Slayer", "TikiQuest3", 2}
+      QuestTween = {CFrame.new(-16666, 105, 1577), CFrame.new(-16666, 105, 1577), CFrame.new(-16666, 105, 1577)}
     end
   end
 end
@@ -2569,378 +2414,6 @@ local function AutoEnelBossPole()
   end
 end
 
-local function AutoCursedDualKatana()
-  local Cursed, DoorProgress = WaitPart(Map, "Turtle", "Cursed")
-  local function MasterySwords()
-    local TushitaM, YamaM = ItemMastery("Tushita"), ItemMastery("Yama")
-    if TushitaM and TushitaM < 350 then
-      if not VerifyTool("Tushita") then
-        FireRemote("LoadItem", "Tushita")
-      end
-    elseif YamaM and YamaM < 350 then
-      if not VerifyTool("Yama") then
-        FireRemote("LoadItem", "Yama")
-      end
-    else
-      return false
-    end;EquipToolTip("Sword")
-    
-    local Enemie = GetEnemies({"Reborn Skeleton", "Living Zombie", "Demonic Soul", "Posessed Mummy"})
-    if Enemie then
-      PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
-      pcall(function()ActiveHaki()BringNPC(Enemie, true)end)
-    else
-      PlayerTP(CFrame.new(-9513, 164, 5786))
-    end
-    return true
-  end
-  
-  local function IndentifyQuest()
-    if VerifyItem("Cursed Dual Katana") then return {"Finished"} end -- Virefica se o jogador possui a CDK
-    if MasterySwords() then return {"MasterySwords"} end -- Verifica a maestria da Yama e a Tushita
-    local Door = Cursed:FindFirstChild("Breakable")
-    if Door and Door.CanCollide then
-      local Prog = FireRemote("CDKQuest", "OpenDoor")
-      if type(Prog) == "string" and Prog == "opened" then
-        return {"OpenDoor"}
-      else
-        Door.CanCollide = false
-      end
-    end -- Verifica se a porta está aberta
-    
-    local Count = GetMaterial("Alucard Fragment") -- Pega a quantidade de material atual
-    if Count == 6 then -- Verifica se é a ultima missão
-      return {"FinalQuest"}
-    elseif Count == 0 then
-      FireRemote("CDKQuest", "Progress", "Evil")FireRemote("CDKQuest", "StartTrial", "Evil")
-      return {"Yama", 1} -- Retorna a primeira missão
-    elseif Map:FindFirstChild("HellDimension") then
-      return {"Yama", 3} -- Retorna a dimensão da Yama
-    elseif Map:FindFirstChild("HeavenlyDimension") then
-      return {"Tushita", 3} -- Retorna a dimensão da Tushita
-    elseif Player:FindFirstChild("QuestHaze") then
-      return {"Yama", 2} -- Retorna a névoa da miseria
-    end
-    
-    local Progress = FireRemote("CDKQuest", "Progress")
-    local Good = Progress.Good
-    local Evil = Progress.Evil
-    
-    if Evil and Evil >= 0 and Evil < 3 then
-      FireRemote("CDKQuest", "Progress", "Evil")FireRemote("CDKQuest", "StartTrial", "Evil")
-      if Evil == 0 then
-        return {"Yama", 1}
-      elseif Evil == 1 then
-        return {"Yama", 2}
-      elseif Evil == 2 then
-        return {"Yama", 3}
-      end
-    elseif Good and Good >= 0 and Good < 3 then
-      FireRemote("CDKQuest", "Progress", "Good")FireRemote("CDKQuest", "StartTrial", "Good")
-      if Good == 0 then
-        return {"Tushita", 1}
-      elseif Good == 1 then
-        return {"Tushita", 2}
-      elseif Good == 2 then
-        return {"Tushita", 3}
-      end
-    end
-  end
-  
-  local function KillHazeEnemies()
-    local QuestHaze = Player:FindFirstChild("QuestHaze")
-    if QuestHaze then
-      local Nearest, Enemie = math.huge
-      for _,v in pairs(QuestHaze:GetChildren()) do
-        if v.Value > 0 then
-          local plrPP = Player.Character and Player.Character.PrimaryPart
-          local EnemiePos = v:GetAttribute("Position")
-          if v.Name == "Dragon Crew Warrior" then EnemiePos = Vector3.new(6431, 51, -1043)end
-          if plrPP and EnemiePos and (EnemiePos - plrPP.Position).Magnitude <= Nearest then
-            Nearest, Enemie = (EnemiePos - plrPP.Position).Magnitude, ({Name = v.Name, Position = EnemiePos})
-          end
-        end
-      end
-      if Enemie then
-        local Enemies = GetEnemies({Enemie.Name})
-        if Enemies and Enemies:FindFirstChild("HumanoidRootPart") then
-          PlayerTP(Enemies.HumanoidRootPart.CFrame + getgenv().FarmPos)
-          pcall(function()ActiveHaki()EquipTool()BringNPC(Enemies)end)
-        else
-          if Enemie.Position then
-            PlayerTP(CFrame.new(Enemie.Position))
-          end
-        end;getgenv().CursedDualKatana = true
-      else
-        getgenv().CursedDualKatana = false
-      end
-    end
-  end
-  
-  local function GetTorch(Dimension)
-    if Dimension then
-      local Torch1 = Dimension:FindFirstChild("Torch1")
-      local Torch2 = Dimension:FindFirstChild("Torch2")
-      local Torch3 = Dimension:FindFirstChild("Torch3")
-      
-      if Torch1 and Torch1:FindFirstChild("ProximityPrompt") then
-        if Torch1.ProximityPrompt.Enabled then
-          return Torch1
-        end
-      end
-      if Torch2 and Torch2:FindFirstChild("ProximityPrompt") then
-        if Torch2.ProximityPrompt.Enabled then
-          return Torch2
-        end
-      end
-      if Torch3 and Torch3:FindFirstChild("ProximityPrompt") then
-        if Torch3.ProximityPrompt.Enabled then
-          return Torch3
-        end
-      end
-      return Dimension:FindFirstChild("Exit")
-    end
-  end
-  
-  local function InvokeSoulReaper()
-    local HellDimension = Map:FindFirstChild("HellDimension")
-    if HellDimension then
-      local plrPP = Player.Character and Player.Character.PrimaryPart
-      if plrPP and (plrPP.Position - HellDimension.WorldPivot.p).Magnitude < 2500 then
-        local Enemies = GetEnemies({"Hell's Messenger", "Cursed Skeleton"}, 2500)
-        local Torch = GetTorch(HellDimension)
-        
-        if Enemies then
-          PlayerTP(Enemies.HumanoidRootPart.CFrame + getgenv().FarmPos)
-          pcall(function()ActiveHaki()EquipTool()BringNPC(Enemies, true)end)
-        elseif Torch then
-          PlayerTP(Torch.CFrame)
-          if (plrPP.Position - Torch.Position).Magnitude < 10 then
-            if Torch:FindFirstChild("ProximityPrompt") and fireproximityprompt then
-              fireproximityprompt(Torch.ProximityPrompt)task.wait(0.5)
-            end
-          end
-        end;getgenv().CursedDualKatana = true
-      else
-        getgenv().CursedDualKatana = false
-      end
-    else
-      local SoulReaper = GetEnemies({"Soul Reaper"})
-      if SoulReaper and SoulReaper:FindFirstChild("HumanoidRootPart") then
-        PlayerTP(SoulReaper.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0))DisableTools()
-      elseif VerifyTool("Hallow Essence") then
-        EquipToolName("Hallow Essence")
-        pcall(function()PlayerTP(Map["Haunted Castle"].Summoner.Detection.CFrame)end)
-      else
-        if GetMaterial("Bones") >= 50 then
-          FireRemote("Bones", "Buy", 1, 1)
-        end
-        local Enemie = GetEnemies({"Reborn Skeleton", "Living Zombie", "Demonic Soul", "Posessed Mummy"})
-        if Enemie then
-          PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
-          pcall(function()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
-        else
-          PlayerTP(CFrame.new(-9513, 164, 5786))
-        end
-      end;getgenv().CursedDualKatana = true
-    end
-  end
-  
-  local function DieGhost()
-    if not VerifyTool("Yama") then
-      FireRemote("LoadItem", "Yama")
-    else
-      local NPC = GetEnemies({"Forest Pirate"})EquipToolName("Yama")
-      
-      if NPC and NPC:FindFirstChild("HumanoidRootPart") then
-        PlayerTP(NPC.HumanoidRootPart.CFrame * CFrame.new(0, 0, -2))
-      else
-        PlayerTP(CFrame.new(-13350, 332, -7645))
-      end;getgenv().CursedDualKatana = true
-    end
-  end
-  
-  local function GetPirateRaidNPC()
-    for _,npc in pairs(Enemies:GetChildren()) do
-      if npc.Name ~= "rip_indra True Form" and IsAlive(npc) then
-        if npc.PrimaryPart and (npc.PrimaryPart.Position - Vector3.new(-5556, 314, -2988)).Magnitude < 700 then
-          return npc
-        end
-      end
-    end
-  end
-  
-  local function PirateRaid()
-    if VerifyRaidPirate(true) then
-      local Enemie = GetPirateRaidNPC()
-      if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
-        PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
-        pcall(function()ActiveHaki()EquipTool()BringNPC(Enemie, true)end)
-      else
-        PlayerTP(CFrame.new(-5556, 314, -2988))
-      end;getgenv().CursedDualKatana = true
-    else
-      getgenv().CursedDualKatana = false
-    end
-  end
-  
-  local function BigMoon()
-    local HeavenlyDimension = Map:FindFirstChild("HeavenlyDimension")
-    if HeavenlyDimension then
-      local plrPP = Player.Character and Player.Character.PrimaryPart
-      if plrPP and (plrPP.Position - HeavenlyDimension.WorldPivot.p).Magnitude < 2500 then
-        local Enemies = GetEnemies({"Heaven's Guardian", "Cursed Skeleton"}, 2500)
-        local Torch = GetTorch(HeavenlyDimension)
-        if Enemies then
-          PlayerTP(Enemies.HumanoidRootPart.CFrame + getgenv().FarmPos)
-          pcall(function()ActiveHaki()EquipTool()BringNPC(Enemies, true)end)
-        elseif Torch then
-          PlayerTP(Torch.CFrame)
-          if (plrPP.Position - Torch.Position).Magnitude < 10 then
-            if Torch:FindFirstChild("ProximityPrompt") and fireproximityprompt then
-              fireproximityprompt(Torch.ProximityPrompt)task.wait(0.5)
-            end
-          end
-        end;getgenv().CursedDualKatana = true
-      else
-        getgenv().CursedDualKatana = false
-      end
-    else
-      local Boss = GetEnemies({"Cake Queen"})
-      if Boss and Boss:FindFirstChild("HumanoidRootPart") then
-        PlayerTP(Boss.HumanoidRootPart.CFrame + getgenv().FarmPos)
-        pcall(function()ActiveHaki()EquipTool()end)
-      else
-        PlayerTP(CFrame.new(-710, 382, -11150))
-      end;getgenv().CursedDualKatana = true
-    end
-  end
-  
-  local Boat1, Boat2, Boat3
-  local function TalkBoatsDealer()
-    local plrPP = Player.Character and Player.Character.PrimaryPart
-    local BoatDealer = NPCS:FindFirstChild("Luxury Boat Dealer")
-    if plrPP then
-      if not Boat1 then
-        PlayerTP(CFrame.new(-9550, 21, 4638))getgenv().CursedDualKatana = true
-        if BoatDealer and (plrPP.Position - Vector3.new(-9550, 21, 4638)).Magnitude < 5 then
-          FireRemote("CDKQuest", "BoatQuest", BoatDealer)FireRemote("CDKQuest", "BoatQuest", BoatDealer, "Check")task.wait(1)Boat1 = true
-        end
-      elseif not Boat2 then
-        PlayerTP(CFrame.new(-9531, 7, -8376))getgenv().CursedDualKatana = true
-        if BoatDealer and (plrPP.Position - Vector3.new(-9531, 7, -8376)).Magnitude < 5 then
-          FireRemote("CDKQuest", "BoatQuest", BoatDealer)FireRemote("CDKQuest", "BoatQuest", BoatDealer, "Check")task.wait(1)Boat2 = true
-        end
-      elseif not Boat3 then
-        PlayerTP(CFrame.new(-4602, 16, -2880))getgenv().CursedDualKatana = true
-        if BoatDealer and (plrPP.Position - Vector3.new(-4602, 16, -2880)).Magnitude < 5 then
-          FireRemote("CDKQuest", "BoatQuest", BoatDealer)FireRemote("CDKQuest", "BoatQuest", BoatDealer, "Check")task.wait(1)Boat3 = true
-        end
-      else
-        getgenv().CursedDualKatana = false
-      end
-    end
-  end
-  
-  task.spawn(function()
-    while getgenv().AutoCursedDualKatana do task.wait()
-      local Quest = IndentifyQuest()
-      if Quest then
-        getgenv().CurrentQuest = Quest
-      end
-    end
-  end)
-  
-  while getgenv().AutoCursedDualKatana do task.wait()
-    if MyLevel.Value >= 2200 then
-      local Quest = CurrentQuest
-      if Quest then
-        if Quest[1] == "Finished" then
-          getgenv().CursedDualKatana = false
-        elseif Quest[1] == "MasterySwords" then
-          getgenv().CursedDualKatana = true
-        elseif Quest[1] == "OpenDoor" then
-          local plrPP = Player.Character and Player.Character.PrimaryPart
-          if plrPP and (plrPP.Position - Vector3.new(-12131, 578, -6707)).Magnitude < 5 then
-            FireRemote("CDKQuest", "OpenDoor")FireRemote("CDKQuest", "OpenDoor", true)
-          else
-            PlayerTP(CFrame.new(-12131, 578, -6707))getgenv().CursedDualKatana = true
-          end
-        elseif Quest[1] == "FinalQuest" then
-          if not VerifyTool("Tushita") and not VerifyTool("Yama") then
-            FireRemote("LoadItem", "Tushita")
-          else
-            if VerifyNPC("Cursed Skeleton Boss") then
-              local Enemie = GetEnemies({"Cursed Skeleton Boss"})
-              if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
-                PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
-                pcall(function()ActiveHaki()end)
-              end;EquipToolTip("Sword")
-            else
-              local Pedestal1 = Cursed:FindFirstChild("Pedestal1")
-              local Pedestal2 = Cursed:FindFirstChild("Pedestal2")
-              local Pedestal3 = Cursed:FindFirstChild("Pedestal3")
-              
-              local Pedestal, Prompt
-              if Pedestal3 and Pedestal3:FindFirstChild("ProximityPrompt") then
-                if Pedestal3.ProximityPrompt.Enabled then
-                  Pedestal, Prompt = Pedestal3, Pedestal3.ProximityPrompt
-                end
-              end
-              if Pedestal2 and Pedestal2:FindFirstChild("ProximityPrompt") then
-                if Pedestal2.ProximityPrompt.Enabled then
-                  Pedestal, Prompt = Pedestal2, Pedestal2.ProximityPrompt
-                end
-              end
-              if Pedestal1 and Pedestal1:FindFirstChild("ProximityPrompt") then
-                if Pedestal1.ProximityPrompt.Enabled then
-                  Pedestal, Prompt = Pedestal1, Pedestal1.ProximityPrompt
-                end
-              end
-              if DialogVisible() then
-                VirtualUser:ClickButton1(Vector2.new(1e4, 1e4))
-              else
-                if Pedestal then
-                  local plrPP = Player.Character and Player.Character.PrimaryPart
-                  if plrPP and (plrPP.Position - Pedestal.Position).Magnitude < 10 then
-                    if Prompt and fireproximityprompt then
-                      fireproximityprompt(Prompt)task.wait(0.5)
-                    end
-                  else
-                    PlayerTP(Pedestal.CFrame)
-                  end
-                else
-                  PlayerTP(CFrame.new(-12344, 603, -6551))
-                end
-              end
-            end
-          end;getgenv().CursedDualKatana = true
-        elseif Quest[1] == "Tushita" then
-          getgenv().ClickRequest = true
-          if Quest[2] == 1 then
-            TalkBoatsDealer()
-          elseif Quest[2] == 2 then
-            PirateRaid()
-          else BigMoon() end
-        elseif Quest[1] == "Yama" then
-          if Quest[2] == 1 then
-            DieGhost()getgenv().ClickRequest = false
-          elseif Quest[2] == 2 then
-            KillHazeEnemies()getgenv().ClickRequest = true
-          else InvokeSoulReaper() end
-        else
-          getgenv().CursedDualKatana = false
-        end
-      end
-    else
-      getgenv().CursedDualKatana = false
-    end
-  end
-  
-  getgenv().ClickRequest = true
-  getgenv().CursedDualKatana = false
-end
-
 local function AutoRainbowHaki()
   while getgenv().AutoRainbowHaki do task.wait()
     if VerifyQuest("Stone") then
@@ -3000,56 +2473,6 @@ local function AutoRainbowHaki()
       end
     else
       FireRemote("HornedMan", "Bet")
-    end
-  end
-end
-
-local function AutoSoulGuitar()
-  local NPCs = workspace:WaitForChild("NPCs", 9e9)
-  local Map = workspace:WaitForChild("Map", 9e9)
-  local Castle = Map:WaitForChild("Haunted Castle", 9e9)
-  
-  local function BringZombie()
-    local plrChar = Player and Player.Character
-    local plrPP = plrChar and plrChar.PrimaryPart
-    local EnemiesNumber = 0
-    for _,npc in pairs(Enemies:GetChildren()) do
-      if npc and npc.Name == "Living Zombie" and npc.PrimaryPart and plrPP
-      and (npc.PrimaryPart.Position - plrPP.Position).Magnitude < 1000 then
-        npc:SetPrimaryPartCFrame(plrPP.CFrame * CFrame.new(0, -15, -15))
-        if npc:FindFirstChild("HumanoidRootPart") then
-				  npc.HumanoidRootPart.CanCollide = false
-				  npc.HumanoidRootPart.Size = Vector3.new(40, 40, 40)
-				end
-				if npc:FindFirstChild("Humanoid") and npc.Humanoid:FindFirstChild("Animator") then
-					npc.Humanoid.Animator:Destroy()
-				end
-				if npc:FindFirstChild("Humanoid") and npc.Humanoid.Health <= 0 then
-				  npc:Destroy()
-				end
-				sethiddenproperty(Player, "SimulationRadius",  math.huge)
-				EnemiesNumber = EnemiesNumber + 1
-      end
-    end
-    return EnemiesNumber
-  end
-  
-  while getgenv().AutoSoulGuitar do task.wait()
-    if VerifyTool("Soul Guitar") then
-    elseif NPCs:FindFirstChild("Skeleton Machine") then
-      FireRemote("soulGuitarBuy",true)
-    elseif NPCs:FindFirstChild("Ghost") then
-      FireRemote("GuitarPuzzleProgress", "Ghost")
-    else
-    end
-    --[[game:GetService("Workspace").Map["Haunted Castle"].ElevatorDoor.Left
-    game:GetService("Workspace").NPCs["Skeleton Machine"].HumanoidRootPart
-    game:GetService("Workspace").Map["Haunted Castle"].Placard1.Right.Part]]
-    local plrChar = Player and Player.Character
-    local plrPP = plrChar and plrChar.PrimaryPart
-    PlayerTP(CFrame.new(-10129, 154, 5928))
-    if plrPP and (plrPP.Position - Vector3.new(-10129, 154, 5928)).Magnitude < 5 and BringZombie() > 5 then
-      pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
     end
   end
 end
@@ -8399,15 +7822,6 @@ local Tema = Misc:AddDropdown({
 })
 
 Misc:AddSection({"Configs"})
-Misc:AddDropdown({
-	Name = "Select Fast Attack Type",
-	Options = {"Slow", "Normal" , "Fast"},
-	Default = "Normal",
-	Flag = "NahMakmafadtkwmlaakfnkr",
-	Callback = function(Value)
-		getgenv().FastAttackMethod = Value
-	end
-})
 Misc:AddSlider({"Farm Distance", 5, 30, 1, 20, function(Value)
   getgenv().FarmPos = Vector3.new(0, Value or 15, Value or 10)getgenv().FarmDistance = Value
 end, "Misc/FarmDistance"})
@@ -8417,16 +7831,9 @@ end, "Misc/TweenSpeed"})
 Misc:AddSlider({"Bring Mobs Distance", 50, 500, 10, 250, function(Value)
   getgenv().BringMobsDistance = Value or 250
 end, "Misc/BringMobsDistance"})
-Misc:AddSlider({"Fast Attack Delay", 0.1, 0.9, 0.01, 0, function(Value)
-  getgenv().AutoClickDelay = Value
-end, "Misc/AutoClickDelay"})
 Misc:AddToggle({"Fast Attack", true, function(Value)
   getgenv().FastAttack = Value
 end, "Misc/FastAttack"})
-Misc:AddToggle({"Increase Attack Distance", true, function(Value)
-  getgenv().AttackDistance = Value
-  task.spawn(AttackDistance)
-end, "Misc/IncreaseAttackDistance"})
 Misc:AddToggle({"Bring Mobs", true, function(Value)
   getgenv().BringMobs = Value
 end, "Misc/BringMobs"})
