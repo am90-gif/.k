@@ -381,7 +381,6 @@ task.spawn(function()
       Vector3.new(-12471, 374, -7551), -- Mansion
       Vector3.new(5664, 1013, -338), -- Hydra Island
       Vector3.new(-5092, 315, -3130), -- Castle on the Sea
-      Vector3.new(5319, 23, -93), -- Beautiful Pirate
       Vector3.new(28286, 14897, 103) -- Temple of Time
     }
   end
@@ -662,12 +661,12 @@ function module:GetBladeHits()
   
   for _, Enemy in Characters:GetChildren() do
     if Enemy ~= Character and Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
-      table.insert(BladeHits, Enemy:FindFirstChild("Head"))
+      table.insert(BladeHits, Enemy:FindFirstChild("HumanoidRootPart"))
     end
   end
   for _, Enemy in Enemies:GetChildren() do
     if Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
-      table.insert(BladeHits, Enemy:FindFirstChild("Head"))
+      table.insert(BladeHits, Enemy:FindFirstChild("HumanoidRootPart"))
     end
   end
   
@@ -879,11 +878,20 @@ local function BuyFightStyle(Style)
 end
 
 local function AutoChestTween2()
-for i, v in pairs(game:GetService("Workspace").ChestModels:GetChildren()) do
-if v.Name == "GoldChest" or v.Name == "DiamondChest" or v.Name == "SilverChest" then
-PlayerTP(v.PushBox.CFrame)
-end
-end
+local ChestDistance = math.huge
+    local Chest = nil
+    local plrChar = Player and Player.Character and Player.Character.PrimaryPart
+    for _,ChestVerify in pairs(workspace.ChestModels:GetChildren()) do
+        if ChestVerify.Name == "DiamondChest" or ChestVerify.Name == "GoldChest" or ChestVerify.Name == "SilverChest" then
+          if plrChar and (plrChar.Position - ChestVerify.PushBox.Position).Magnitude <= ChestDistance then
+            ChestDistance = (plrChar.Position - ChestVerify.PushBox.Position).Magnitude
+            Chest = ChestVerify
+          end
+        end
+      end
+    if Chest then
+      PlayerTP(Chest.PushBox.CFrame)
+    end
   end
 
 local function AutoChestTween()
