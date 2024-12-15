@@ -109,7 +109,8 @@ task.spawn(function()
       or getgenv().UpAutoObservation
       or getgenv().TalkStone
       or getgenv().DoorRace
-      or getgenv().AutoTrainRace then
+      or getgenv().AutoTrainRace
+      or getgenv().AutoChestBypass then
         getgenv().OnFarm = true
       else
         getgenv().OnFarm = false
@@ -615,21 +616,21 @@ end
 
 local function EspChests()
   while getgenv().EspChests do task.wait()
-    for _,Chest in pairs(workspace:GetChildren()) do
+    for _,Chest in pairs(workspace.ChestModels:GetChildren()) do
       if Chest then
-        if Chest.Name == "Chest3" then
+        if Chest.Name == "DiamondChest" then
           AddESP(Chest, Color3.fromRGB(0, 255, 255))
-        elseif Chest.Name == "Chest2" then
+        elseif Chest.Name == "GoldChest" then
           AddESP(Chest, Color3.fromRGB(255, 255, 0))
-        elseif Chest.Name == "Chest1" then
+        elseif Chest.Name == "SilverChest" then
           AddESP(Chest, Color3.fromRGB(150, 150, 150))
         end
       end
     end
   end
-  for _,Chest in pairs(workspace:GetChildren()) do
+  for _,Chest in pairs(workspace.ChestModels:GetChildren()) do
     if Chest then
-      if Chest.Name == "Chest3" or Chest.Name == "Chest2" or Chest.Name == "Chest1" then
+      if Chest.Name == "DiamondChest" or Chest.Name == "GoldChest" or Chest.Name == "SilverChest" then
         RemoveESP(Chest)
       end
     end
@@ -877,59 +878,12 @@ local function BuyFightStyle(Style)
   FireRemote(Style)
 end
 
-local function AutoChestBypass()
-  local ActiveTick = tick()
-  while getgenv().AutoChestBypass do task.wait()
-    local plrRP = Player and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
-    local Chest3 = workspace:FindFirstChild("Chest3")
-    local Chest2 = workspace:FindFirstChild("Chest2")
-    local Chest1 = workspace:FindFirstChild("Chest1")
-    if not VerifyTool("God's Chalice") and not VerifyTool("Fist of Darkness") then
-      if plrRP and Chest3 and Chest3.Transparency < 1 then
-        plrRP.CFrame = Chest3.CFrame
-      elseif plrRP and Chest2 and Chest2.Transparency < 1 then
-        plrRP.CFrame = Chest2.CFrame
-      elseif plrRP and Chest1 and Chest1.Transparency < 1 then
-        plrRP.CFrame = Chest1.CFrame
-      end
-    end
-    for _,ChestVerify2 in pairs(workspace:GetChildren()) do
-        if not ChestVerify2.Name == "Chest3" and ChestVerify2.Name == "Chest2" and ChestVerify2.Name == "Chest1" then
-        ServerHop()
-        end
-        end
-    if not VerifyTool("God's Chalice") and not VerifyTool("Fist of Darkness") and tick() - ActiveTick > 10 then
-      local plrH = Player and Player.Character and Player.Character:FindFirstChild("Humanoid")
-      if plrH then
-      plrH.Health = 0
-        ActiveTick = tick()
-      end
-    end
-  end
-end
-
 local function AutoChestTween2()
-    local ChestDistance = math.huge
-    local Chest = nil
-    local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-    for _,ChestVerify in pairs(workspace:GetChildren()) do
-      if ChestVerify:IsA("BasePart") and ChestVerify.Transparency < 1 then
-        if ChestVerify.Name == "Chest3" or ChestVerify.Name == "Chest2" or ChestVerify.Name == "Chest1" then
-          if plrChar and (plrChar.Position - ChestVerify.Position).Magnitude <= ChestDistance then
-            ChestDistance = (plrChar.Position - ChestVerify.Position).Magnitude
-            Chest = ChestVerify
-          end
-        end
-      end
-    end
-    for _,ChestVerify2 in pairs(workspace:GetChildren()) do
-        if not ChestVerify2.Name == "Chest3" and ChestVerify2.Name == "Chest2" and ChestVerify2.Name == "Chest1" then
-        ServerHop()
-        end
-        end
-    if Chest then
-      PlayerTP(Chest.CFrame)
-    end
+for i, v in pairs(game:GetService("Workspace").ChestModels:GetChildren()) do
+if v.Name == "GoldChest" or v.Name == "DiamondChest" or v.Name == "SilverChest" then
+PlayerTP(v.PushBox.CFrame)
+end
+end
   end
 
 local function AutoChestTween()
@@ -937,23 +891,42 @@ local function AutoChestTween()
     local ChestDistance = math.huge
     local Chest = nil
     local plrChar = Player and Player.Character and Player.Character.PrimaryPart
-    for _,ChestVerify in pairs(workspace:GetChildren()) do
-      if ChestVerify:IsA("BasePart") and ChestVerify.Transparency < 1 then
-        if ChestVerify.Name == "Chest3" or ChestVerify.Name == "Chest2" or ChestVerify.Name == "Chest1" then
-          if plrChar and (plrChar.Position - ChestVerify.Position).Magnitude <= ChestDistance then
-            ChestDistance = (plrChar.Position - ChestVerify.Position).Magnitude
+    for _,ChestVerify in pairs(workspace.ChestModels:GetChildren()) do
+        if ChestVerify.Name == "DiamondChest" or ChestVerify.Name == "GoldChest" or ChestVerify.Name == "SilverChest" then
+          if plrChar and (plrChar.Position - ChestVerify.PushBox.Position).Magnitude <= ChestDistance then
+            ChestDistance = (plrChar.Position - ChestVerify.PushBox.Position).Magnitude
             Chest = ChestVerify
           end
         end
       end
-    end
-    for _,ChestVerify2 in pairs(workspace:GetChildren()) do
-        if not ChestVerify2.Name == "Chest3" and ChestVerify2.Name == "Chest2" and ChestVerify2.Name == "Chest1" then
-        ServerHop()
-        end
-        end
     if Chest then
-      PlayerTP(Chest.CFrame)
+      PlayerTP(Chest.PushBox.CFrame)
+    end
+  end
+end
+
+local function AutoChestBypass()
+  local ActiveTick = tick()
+  while getgenv().AutoChestBypass do task.wait()
+    local plrRP = Player and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+    local Chest3 = workspace.ChestModels:FindFirstChild("DiamondChest")
+    local Chest2 = workspace.ChestModels:FindFirstChild("GoldChest")
+    local Chest1 = workspace.ChestModels:FindFirstChild("SilverChest")
+    if not VerifyTool("God's Chalice") and not VerifyTool("Fist of Darkness") then
+      if plrRP and Chest3 then
+        plrRP.CFrame = Chest3.PushBox.CFrame
+      elseif plrRP and Chest2 then
+        plrRP.CFrame = Chest2.PushBox.CFrame
+      elseif plrRP and Chest1 then
+        plrRP.CFrame = Chest1.PushBox.CFrame
+      end
+    end
+    if not VerifyTool("God's Chalice") and not VerifyTool("Fist of Darkness") and tick() - ActiveTick > 10 then
+      local plrH = Player and Player.Character and Player.Character:FindFirstChild("Humanoid")
+      if plrH then
+      plrH.Health = 0
+        ActiveTick = tick()
+      end
     end
   end
 end
@@ -2607,7 +2580,7 @@ local function AutoFarmMaterial()
         elseif Material == "Conjured Cocoa" then
           EnemiesList, NPCPos = {"Cocoa Warrior", "Chocolate Bar Battler"}, CFrame.new(400, 81, -12257)
         elseif Material == "Dragon Scale" then
-          EnemiesList, NPCPos = {"Dragon Crew Archer"}, CFrame.new(6689, 378, 331)
+          EnemiesList, NPCPos = {"Dragon Crew Archer"}, CFrame.new(6631, 602, 142)
         end
       end
     end
@@ -4968,44 +4941,6 @@ if Sea3 then
     end
   })
 end
-if PlayerLevel.Value <= 400 and Sea1 then
-MainFarm:AddToggle({
-	Name = "Fast Level Farm",
-	Default = false,
-	Callback = function(Value)
-		getgenv().AutoPlayerHunter = Value
-	end
-})
-spawn(function()
-        pcall(function()
-            while wait() do
-                if getgenv().AutoPlayerHunter then
-                    if game:GetService("Players").LocalPlayer.PlayerGui.Main.PvpDisabled.Visible == true then
-                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EnablePvp")
-                    end
-                end
-            end
-        end)
-    end)
-	spawn(function()
-		while wait() do
-			if getgenv().AutoPlayerHunter then
-				if game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Visible == false then
-					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")
-				else
-					for i,v in pairs(game:GetService("Workspace").Characters:GetChildren()) do
-						if string.find(game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text,v.Name) then
-							repeat wait()pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-							PlayerTP(v.HumanoidRootPart.CFrame + getgenv().FarmPos)				
-							until getgenv().AutoPlayerHunter == false or v.Humanoid.Health <= 0
-							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AbandonQuest")
-						end
-					end
-				end
-			end
-		end
-	end)
-end
 
 MainFarm:AddToggle({
 	Name = "Auto Use Skills",
@@ -5285,7 +5220,7 @@ MainFarm:AddToggle({
 })
 
 MainFarm:AddToggle({
-  Name = "Auto Chest < Bypass Risk >",
+  Name = "Auto Chest < Bypass >",
   Callback = function(Value)
     getgenv().AutoChestBypass = Value
     AutoChestBypass()
@@ -7460,11 +7395,11 @@ spawn(function()
 						if game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(3,0,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(0,0,0)
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Lava Pirate").HumanoidRootPart.CFrame * CFrame.new(0,20,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
@@ -7474,29 +7409,29 @@ spawn(function()
 						if game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(3,0,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(0,0,0)
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Galley Captain").HumanoidRootPart.CFrame * CFrame.new(0,20,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
 							PlayerTP(CFrame.new(5533.29785, 88.1079102, 4852.3916))
 						end
 					elseif Sea3 then
-						if game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander") then
+						if game:GetService("Workspace").Enemies:FindFirstChild("Dragon Crew Archer") then
 							if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel") then
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(3,0,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Dragon Crew Archer").HumanoidRootPart.CFrame * CFrame.new(0,0,0)
 								until getgenv().UpAutoObservation == false or not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							else
 								repeat task.wait()
-									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Giant Islander").HumanoidRootPart.CFrame * CFrame.new(0,50,0)
+									game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Enemies:FindFirstChild("Dragon Crew Archer").HumanoidRootPart.CFrame * CFrame.new(0,20,0)
 								until getgenv().UpAutoObservation == false or game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("ImageLabel")
 							end
 						else
-							PlayerTP(CFrame.new(4530.3540039063, 656.75695800781, -131.60952758789))
+							PlayerTP(CFrame.new(6631, 602, 142))
 						end
 					end
 				end
@@ -7679,6 +7614,7 @@ elseif Sea3 then
     "Great Tree",
     "Castle On The Sea",
     "Hydra Island",
+    "Dojo Island",
     "Floating Turtle",
     "Haunted Castle",
     "Ice Cream Island",
@@ -7776,6 +7712,8 @@ local TPToggle = Teleport:AddToggle({Name = "Teleport To Island",Callback = func
           PlayerTP(CFrame.new(-5073, 315, -3153))
         elseif Island == "Hydra Island" then
           PlayerTP(CFrame.new(5664, 1013, -338))
+          elseif Island == "Dojo Island" then
+          PlayerTP(CFrame.new(5602, 1207, 894))
         elseif Island == "Great Tree" then
           PlayerTP(CFrame.new(2681, 1682, -7190))
         elseif Island == "Floating Turtle" then
