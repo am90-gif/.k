@@ -661,12 +661,12 @@ function module:GetBladeHits()
   
   for _, Enemy in Characters:GetChildren() do
     if Enemy ~= Character and Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
-      table.insert(BladeHits, Enemy:FindFirstChild("HumanoidRootPart"))
+      table.insert(BladeHits, Enemy.HumanoidRootPart)
     end
   end
   for _, Enemy in Enemies:GetChildren() do
     if Player:DistanceFromCharacter(Enemy.PrimaryPart.Position) < self.Distance then
-      table.insert(BladeHits, Enemy:FindFirstChild("HumanoidRootPart"))
+      table.insert(BladeHits, Enemy.HumanoidRootPart)
     end
   end
   
