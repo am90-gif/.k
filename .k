@@ -305,8 +305,8 @@ local function GetBossQuest(BossName)
     return true, CFrame.new(-1049, 40, 6791), "PiratePortQuest"
   elseif BossName == "Beautiful Pirate" then
     return true, CFrame.new(5241, 23, 129), "DeepForestIsland2"
-  elseif BossName == "Island Empress" then
-    return true, CFrame.new(5730, 602, 199), "AmazonQuest2"
+  elseif BossName == "Hydra Leader" then
+    return true, CFrame.new(5851, 1170, -137), "VenomCrewQuest"
   elseif BossName == "Kilo Admiral" then
     return true, CFrame.new(2889, 424, -7233), "MarineTreeIsland"
   elseif BossName == "Captain Elephant" then
@@ -351,7 +351,7 @@ local BossListT = {
   "rip_indra True Form",
   "Soul Reaper",
   "Stone",
-  "Island Empress",
+  "Hydra Leader",
   "Kilo Admiral",
   "Captain Elephant",
   "Beautiful Pirate",
@@ -378,9 +378,8 @@ task.spawn(function()
   elseif Sea3 then
     PortalPos = {
       Vector3.new(-12471, 374, -7551), -- Mansion
-      Vector3.new(5756, 610, -282), -- Hydra Island
+      Vector3.new(5664, 1013, -338), -- Hydra Island
       Vector3.new(-5092, 315, -3130), -- Castle on the Sea
-      Vector3.new(-12001, 332, -8861), -- Floating Turtle
       Vector3.new(5319, 23, -93), -- Beautiful Pirate
       Vector3.new(28286, 14897, 103) -- Temple of Time
     }
@@ -1227,21 +1226,24 @@ local function Get_LevelQuest()
         QuestTween = {CFrame.new(219, 105, 6018), CFrame.new(-24, 105, 6155), CFrame.new(-312, 105, 6028)}
       end
     elseif Level >= 1575 and Level < 1600 then
-      Quest = {CFrame.new(5834, 51, -1103), false, "Dragon Crew Warrior", "AmazonQuest", 1}
-      QuestTween = {CFrame.new(5992, 90, -1581), CFrame.new(6364, 90, -1512), CFrame.new(6501, 90, -1104), CFrame.new(6612, 90, -938), CFrame.new(6393, 90, -939)}
+      Quest = {CFrame.new(6738, 127, -713), false, "Dragon Crew Warrior", "DragonCrewQuest", 1}
+      QuestTween = {CFrame.new(6738, 127, -713)}
     elseif Level >= 1600 and Level < 1625 then
-      Quest = {CFrame.new(5834, 51, -1103), false, "Dragon Crew Archer", "AmazonQuest", 2}
-      QuestTween = {CFrame.new(6472, 370, -151), CFrame.new(6547, 370, -51), CFrame.new(6539, 410, 72), CFrame.new(6737, 410, 249), CFrame.new(6768, 410, 390), CFrame.new(6625, 410, 371)}
+      Quest = {CFrame.new(6738, 127, -713), false, "Dragon Crew Archer", "DragonCrewQuest", 2}
+      QuestTween = {CFrame.new(6631, 602, 142)}
     elseif Level >= 1625 and Level < 1650 then
-      Quest = {CFrame.new(5448, 602, 748), false, "Female Islander", "AmazonQuest2", 1}
-      QuestTween = {CFrame.new(4836, 740, 928), CFrame.new(4708, 770, 911), CFrame.new(4672, 790, 695), CFrame.new(4657, 800, 498), CFrame.new(4575, 810, 281)}
-    elseif Level >= 1650 and Level < 1700 then
-      if VerifyNPC("Island Empress") and Level >= 1675 then
-        Quest = {CFrame.new(5448, 602, 748), CFrame.new(5730, 602, 199), "Island Empress", "AmazonQuest2", 3}
+      Quest = {CFrame.new(5210, 1004, 760), false, "Hydra Enforcer", "VenomCrewQuest", 1}
+      QuestTween = {CFrame.new(5210, 1004, 760), CFrame.new(4708, 770, 911), CFrame.new(4672, 790, 695), CFrame.new(4657, 800, 498), CFrame.new(4575, 810, 281)}
+     elseif Level >= 1650 and Level < 1675 then
+      Quest = {CFrame.new(5210, 1004, 760), false, "Venomous Assailant", "VenomCrewQuest", 2}
+      QuestTween = {CFrame.new(5210, 1004, 760), CFrame.new(4708, 770, 911), CFrame.new(4672, 790, 695), CFrame.new(4657, 800, 498), CFrame.new(4575, 810, 281)}
+    elseif Level >= 1675 and Level < 1700 then
+      if VerifyNPC("Hydra Leader") and Level >= 1675 then
+        Quest = {CFrame.new(5210, 1004, 760), CFrame.new(5730, 602, 199), "Hydra Leader", "VenomCrewQuest", 3}
         QuestTween = nil
       else
-        Quest = {CFrame.new(5448, 602, 748), false, "Giant Islander", "AmazonQuest2", 2}
-        QuestTween = {CFrame.new(4784, 660, 155), CFrame.new(4662, 660, -57), CFrame.new(4869, 660, -178), CFrame.new(5056, 660, -267), CFrame.new(5332, 660, -166)}
+        Quest = {CFrame.new(5210, 1004, 760), false, "Venomous Assailant", "VenomCrewQuest", 2}
+      QuestTween = {CFrame.new(5210, 1004, 760), CFrame.new(4708, 770, 911), CFrame.new(4672, 790, 695), CFrame.new(4657, 800, 498), CFrame.new(4575, 810, 281)}
       end
     elseif Level >= 1700 and Level < 1725 then
       Quest = {CFrame.new(2180, 29, -6738), false, "Marine Commodore", "MarineTreeIsland", 1}
@@ -2427,13 +2429,13 @@ local function AutoRainbowHaki()
           ServerHop()
         end
       end
-    elseif VerifyQuest("Island Empress") then
-      local Enemie = GetEnemies({"Island Empress"})
+    elseif VerifyQuest("Hydra Leader") then
+      local Enemie = GetEnemies({"Hydra Leader"})
       if Enemie and Enemie:FindFirstChild("HumanoidRootPart") then
         PlayerTP(Enemie.HumanoidRootPart.CFrame + getgenv().FarmPos)
         pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
       else
-        PlayerTP(CFrame.new(5730, 602, 199))
+        PlayerTP(CFrame.new(5851, 1170, -137))
         if getgenv().RainbowHakiHop then
           ServerHop()
         end
@@ -7549,7 +7551,7 @@ end
 end
 end
 if not game.Workspace.Enemies:FindFirstChild("Training Dummy") then
-PlayerTP(CFrame.new(3758, 92, 254))
+PlayerTP(CFrame.new(3619, 35, 326))
 end
 end
  end)
@@ -7773,7 +7775,7 @@ local TPToggle = Teleport:AddToggle({Name = "Teleport To Island",Callback = func
         elseif Island == "Castle On The Sea" then
           PlayerTP(CFrame.new(-5073, 315, -3153))
         elseif Island == "Hydra Island" then
-          PlayerTP(CFrame.new(5756, 610, -282))
+          PlayerTP(CFrame.new(5664, 1013, -338))
         elseif Island == "Great Tree" then
           PlayerTP(CFrame.new(2681, 1682, -7190))
         elseif Island == "Floating Turtle" then
@@ -7804,7 +7806,7 @@ TPToggle:Callback(function(Value)
       if plrPP then
         Mag = (plrPP.Position - TeleportPos).Magnitude
       end
-    until not getgenv().TeleportToIsland or Mag < 15
+    until not getgenv().TeleportToIsland
     TPToggle:Set(false)
   end
 end)
