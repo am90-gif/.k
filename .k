@@ -98,7 +98,6 @@ task.spawn(function()
       or getgenv().TpAdvanced
       or getgenv().AutoChestMirage
       or getgenv().AutoFrozenDimension
-      or getgenv().KillLeavia
       or getgenv().AutoPlayerHunter
       or getgenv().ChooseGear
       or getgenv().BringFruit
@@ -3367,20 +3366,6 @@ end
                 end)
             end
 end)
-  local TimeKitsune = AutoSea:AddParagraph({"🧭 Waiting For Kitsune Island"})
-spawn(function()
-        pcall(function()
-            while wait() do
-                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == true then
-                if game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland") then
-                    TimeKitsune:SetTitle(game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Text)
-                else
-                    TimeKitsune:SetTitle("🧭 Waiting For Kitsune Island")
-                end
-            end
-          end
-        end)
-    end)
   AutoSea:AddToggle({Name = "Auto Kitsune Island",Callback = function(Value)
     getgenv().AutoKitsuneIsland = Value;AutoKitsuneIsland()
   end})
@@ -3691,86 +3676,6 @@ spawn(function()
                 end)
             end
         end)        
-
-AutoSea:AddToggle({
-	Name = "Auto Kill Leviathan",
-	Default = false,
-	Callback = function(Value)
-		getgenv().KillLeavia = Value
-	end
-})
-
-local gg = getrawmetatable(game)
-local old = gg.__namecall
-setreadonly(gg,false)
-gg.__namecall = newcclosure(function(...)
-	local method = getnamecallmethod()
-	local args = {...}
-	if tostring(method) == "FireServer" then
-		if tostring(args[1]) == "RemoteEvent" then
-			if tostring(args[2]) ~= "true" and tostring(args[2]) ~= "false" then
-				if Skillaimbot then
-					args[2] = AimBotSkillPosition
-					return old(unpack(args))
-				end
-			end
-		end
-	end
-	return old(...)
-end)
-Skillz = true
-Skillx = true
-Skillc = true
-Skillv = true
-spawn(function()
-    while wait() do
-        pcall(function()
-            if AutoSkill then
-                if Skillz then
-                    game:service('VirtualInputManager'):SendKeyEvent(true, "Z", false, game)
-                    wait(.1)
-                    game:service('VirtualInputManager'):SendKeyEvent(false, "Z", false, game)
-                end
-                if Skillx then
-                    game:service('VirtualInputManager'):SendKeyEvent(true, "X", false, game)
-                    wait(.1)
-                    game:service('VirtualInputManager'):SendKeyEvent(false, "X", false, game)
-                end
-                if Skillc then
-                    game:service('VirtualInputManager'):SendKeyEvent(true, "C", false, game)
-                    wait(.1)
-                    game:service('VirtualInputManager'):SendKeyEvent(false, "C", false, game)
-                end
-                if Skillv then
-                    game:service('VirtualInputManager'):SendKeyEvent(true, "V", false, game)
-                    wait(.1)
-                    game:service('VirtualInputManager'):SendKeyEvent(false, "V", false, game)
-                end
-            end
-        end)
-    end
-end)
-spawn(function()
-    while wait() do
-        if getgenv().KillLeavia then
-            pcall(function()
-for i,v in pairs(game:GetService("Workspace").SeaBeasts:GetChildren()) do
-                        if v.Name == "Leviathan" and v:FindFirstChild("HumanoidRootPart") then
-                            repeat wait()
-                                PlayerTP(v.HumanoidRootPart.CFrame * CFrame.new(0,500,0))
-                                pcall(function()PlayerClick()ActiveHaki()EquipTool()end)
-                                AutoSkill = true
-                                AimBotSkillPosition = v.HumanoidRootPart
-                                Skillaimbot = true
-                            until not v:FindFirstChild("HumanoidRootPart") or getgenv().KillLeavia == false
-                            AutoSkill = false
-                            Skillaimbot = false
-                        end
-                    end
-            end)
-        end
-    end
-end)
 
 AutoSea:AddToggle({
 	Name = "Auto Bribe",
