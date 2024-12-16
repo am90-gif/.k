@@ -684,10 +684,17 @@ function module:attack()
 end
 
 local function PlayerClick()
-local plrPP = Player.Character and Player.Character.PrimaryPart
-  if plrPP and TeleportPos and (plrPP.Position - TeleportPos).Magnitude < 25 then
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().FastAttack then
+pcall(function()
 module:attack()
+ end)
 end
+end
+end)
+end)
 end
 
 local function ServerHop()
@@ -4985,6 +4992,41 @@ end
 end)
 end)
 
+MainFarm:AddToggle({
+	Name = "Spam M1 Dragon-Kitsune",
+	Default = false,
+	Callback = function(Value)
+		getgenv().AutoDragon = Value
+	end
+})
+
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().AutoDragon then
+pcall(function()
+if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dragon-Dragon") then
+local args = {
+    [1] = Vector3.new(-0.7925562262535095, -0, 0.6097988486289978),
+    [2] = 1
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dragon-Dragon").LeftClickRemote:FireServer(unpack(args))
+end
+if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Kitsune-Kitsune") then
+local args = {
+    [1] = Vector3.new(-0.7925562262535095, -0, 0.6097988486289978),
+    [2] = 1
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Kitsune-Kitsune").LeftClickRemote:FireServer(unpack(args))
+end
+ end)
+end
+end
+end)
+end)
+
 MainFarm:AddToggle({"Auto Farm Nearest", false, function(Value)
   getgenv().AutoFarmNearest = Value;AutoFarmNearest()
 end})
@@ -7494,7 +7536,7 @@ end
 end
 end
 if not game.Workspace.Enemies:FindFirstChild("Training Dummy") then
-PlayerTP(CFrame.new(3619, 35, 326))
+PlayerTP(CFrame.new(3642, 10, 261))
 end
 end
  end)
@@ -7622,7 +7664,7 @@ elseif Sea3 then
     "Great Tree",
     "Castle On The Sea",
     "Hydra Island",
-    "Dojo Island",
+    "Dragon Dojo",
     "Floating Turtle",
     "Haunted Castle",
     "Ice Cream Island",
@@ -7720,7 +7762,7 @@ local TPToggle = Teleport:AddToggle({Name = "Teleport To Island",Callback = func
           PlayerTP(CFrame.new(-5073, 315, -3153))
         elseif Island == "Hydra Island" then
           PlayerTP(CFrame.new(5664, 1013, -338))
-          elseif Island == "Dojo Island" then
+          elseif Island == "Dragon Dojo" then
           PlayerTP(CFrame.new(5602, 1207, 894))
         elseif Island == "Great Tree" then
           PlayerTP(CFrame.new(2681, 1682, -7190))
@@ -8232,39 +8274,6 @@ while plr.Data.Exp.Value - EXPFunction(Data.Level.Value) > 0 do
     end
 end
   end})
-Visual:AddSection({"Divine Art"})
-Visual:AddDropdown({
-	Name = "Select Quest",
-	Options = {"AngelQuest1", "AngelQuest2", "AngelQuest3", "AngelQuest4", "AngelQuest5", "AngelQuest6", "AngelQuest7", "AngelQuest8", "AngelQuest9"},
-	Default = "",
-	Flag = "Dialogangel",
-	Callback = function(Value)
-		getgenv().Dialog = Value 
-	end
-})
-Visual:AddButton({
-	Name = "Show Dialog Quest",
-	Callback = function()
-local function StartDialog(DialogName)
-  local ReplicatedStorage = game:GetService("ReplicatedStorage")
-  local DialogueController = require(ReplicatedStorage.DialogueController)
-  local DialoguesList = require(ReplicatedStorage.DialoguesList)
-  
-  for Index,Dialog in pairs(DialoguesList) do
-    if tostring(Index) == DialogName then
-      DialogueController.Start(DialogueController, Dialog)
-    end
-  end
-end
-StartDialog(getgenv().Dialog)
-	end
-})
-Visual:AddButton({
-	Name = "M1 Divine Art",
-	Callback = function()
-getupvalue(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework), 2).activeController.data = require(game:GetService("ReplicatedStorage").ClientWeapons).divineart
-	end
-})
 Visual:AddSection({"Fake Race V4"})
 Visual:AddButton({
 	Name = "Mink Fake Transform",
