@@ -359,66 +359,18 @@ local BossListT = {
   "Longma"
 }
 
-task.spawn(function()
-  local PortalPos = {}
-  if Sea1 then
-    PortalPos = {
-      Vector3.new(-4652, 873, -1754), -- Sky Island 1
-      Vector3.new(-7895, 5547, -380), -- Sky Island 2
-      Vector3.new(61164, 5, 1820), -- Under Water Island
-      Vector3.new(3865, 5, -1926) -- Under Water Island Entrace
-    }
-  elseif Sea2 then
-    PortalPos = {
-      Vector3.new(-317, 331, 597), -- Flamingo Mansion
-      Vector3.new(2283, 15, 867), -- Flamingo Room
-      Vector3.new(923, 125, 32853), -- Cursed Ship
-      Vector3.new(-6509, 83, -133) -- Zombie Island0
-    }
-  elseif Sea3 then
-    PortalPos = {
-      Vector3.new(-12471, 374, -7551), -- Mansion
-      Vector3.new(5664, 1013, -338), -- Hydra Island
-      Vector3.new(-5092, 315, -3130), -- Castle on the Sea
-      Vector3.new(28286, 14897, 103) -- Temple of Time
-    }
-  end
- 
-  function GetTPPos(position)
-    local NearPos = math.huge
-    local TpPos = Vector3.new()
-    table.foreach(PortalPos, function(___, pos)
-      if (pos - position).Magnitude <= NearPos then
-        NearPos = (pos - position).Magnitude
-        TpPos = pos
-      end
-    end)
-    return TpPos
-  end
-end)
-
 local TeleportPos
 local function PlayerTP(Tween_Pos)
   TeleportPos = Tween_Pos.p
   local plrPP = Player.Character and Player.Character.PrimaryPart
   if not plrPP then return end
   local Distance = (plrPP.Position - Tween_Pos.p).Magnitude
-  local PortalPos = GetTPPos(Tween_Pos.p)
-  if (plrPP.Position - Tween_Pos.p).Magnitude > (Tween_Pos.p - PortalPos).Magnitude + 250 then
-    plrPP.CFrame = CFrame.new(PortalPos)
-    block.CFrame = CFrame.new(PortalPos)
-  elseif block then
-    if Distance <= 450 then
-      local tween = game:GetService("TweenService"):Create(block,
-      TweenInfo.new(Distance / tonumber(getgenv().TweenSpeed * 1.8), Enum.EasingStyle.Linear),
-      {CFrame = Tween_Pos}):Play()
-    else
+  if block then
       local tween = game:GetService("TweenService"):Create(block,
       TweenInfo.new(Distance / getgenv().TweenSpeed, Enum.EasingStyle.Linear),
       {CFrame = Tween_Pos}):Play()
     end
   end
-end
 
 local function BoatTP(Boat, pos)
   if Boat then
@@ -673,27 +625,49 @@ function module:GetBladeHits()
 end
 
 function module:attack()
-  local BladeHits = self:GetBladeHits()
-  
-  RegisterAttack:FireServer(0)
-  
+  local BladeHits = self:GetBladeHits()  
+  RegisterAttack:FireServer(0)  
   for _, Hit in BladeHits do
     RegisterHit:FireServer(Hit)
   end
 end
 
 local function PlayerClick()
+if getgenv().MethodAttack == "Slow" then
 spawn(function()
 pcall(function()
-while wait() do
+while wait(5) do
 if getgenv().FastAttack then
 pcall(function()
-module:attack()
+        module:attack()
  end)
 end
 end
 end)
 end)
+end
+if getgenv().MethodAttack == "Normal" then
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().FastAttack then
+pcall(function()
+        module:attack()
+ end)
+end
+end
+end)
+end)
+end
+if getgenv().MethodAttack == "Fast" then
+task.spawn(function()
+      while wait() do
+      if getgenv().FastAttack then
+        module:attack()
+      end
+      end
+    end)
+end
 end
 
 local function ServerHop()
@@ -7717,6 +7691,15 @@ local Tema = Misc:AddDropdown({
 })
 
 Misc:AddSection({"Configs"})
+Misc:AddDropdown({
+	Name = "Select Attack Method",
+	Options = {"Slow", "Normal" , "Fast"},
+	Default = "Slow",
+	Flag = "Naslownfahhth",
+	Callback = function(Value)
+		getgenv().MethodAttack = Value
+	end
+})
 Misc:AddSlider({"Farm Distance", 5, 30, 1, 20, function(Value)
   getgenv().FarmPos = Vector3.new(0, Value or 15, Value or 10)getgenv().FarmDistance = Value
 end, "Misc/FarmDistance"})
