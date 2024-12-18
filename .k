@@ -634,13 +634,17 @@ function module:attack()
 end
 
 local function PlayerClick()
-task.spawn(function()
-      while wait() do
-      if getgenv().FastAttack then
-        module:attack()
-      end
-      end
-    end)
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().FastAttack then
+pcall(function()
+module:attack()
+end)
+end
+end
+end)
+end)
 end
 
 local function ServerHop()
@@ -6578,7 +6582,7 @@ spawn(function()
   DoughKingToggle:Callback(function()CakePrinceToggle:Set(false)end)
   
   QuestsTabs:AddSection({"Rip Indra"})
-  local RipIndraToggle = QuestsTabs:AddToggle({"Auto Rip Indra (Active Button Haki Color Yourself)", false, function(Value)
+  local RipIndraToggle = QuestsTabs:AddToggle({"Auto Rip Indra", false, function(Value)
     getgenv().AutoRipIndra = Value
     AutoRipIndra()
   end})
@@ -7721,9 +7725,24 @@ end, "Misc/TweenSpeed"})
 Misc:AddSlider({"Bring Mobs Distance", 50, 500, 10, 250, function(Value)
   getgenv().BringMobsDistance = Value or 250
 end, "Misc/BringMobsDistance"})
-Misc:AddToggle({"Fast Attack", true, function(Value)
-  getgenv().FastAttack = Value
-end, "Misc/FastAttack"})
+Misc:AddToggle({
+	Name = "Fast Attack",
+	Default = true,
+	Callback = function(Value)
+		getgenv().FastAttack = Value
+	end
+})
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().FastAttack then
+pcall(function()
+module:attack()
+end)
+end
+end
+end)
+end)
 Misc:AddToggle({"Bring Mobs", true, function(Value)
   getgenv().BringMobs = Value
 end, "Misc/BringMobs"})
@@ -7767,7 +7786,6 @@ Misc:AddToggle({
 		getgenv().EnableV3 = Value
 	end
 })
-
 spawn(function()
 pcall(function()
 while wait() do
