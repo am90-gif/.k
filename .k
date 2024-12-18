@@ -109,7 +109,8 @@ task.spawn(function()
       or getgenv().TalkStone
       or getgenv().DoorRace
       or getgenv().AutoTrainRace
-      or getgenv().AutoChestBypass then
+      or getgenv().AutoChestBypass
+      or getgenv().TpPre then
         getgenv().OnFarm = true
       else
         getgenv().OnFarm = false
@@ -633,33 +634,6 @@ function module:attack()
 end
 
 local function PlayerClick()
-if getgenv().MethodAttack == "Slow" then
-spawn(function()
-pcall(function()
-while wait(5) do
-if getgenv().FastAttack then
-pcall(function()
-        module:attack()
- end)
-end
-end
-end)
-end)
-end
-if getgenv().MethodAttack == "Normal" then
-spawn(function()
-pcall(function()
-while wait() do
-if getgenv().FastAttack then
-pcall(function()
-        module:attack()
- end)
-end
-end
-end)
-end)
-end
-if getgenv().MethodAttack == "Fast" then
 task.spawn(function()
       while wait() do
       if getgenv().FastAttack then
@@ -667,7 +641,6 @@ task.spawn(function()
       end
       end
     end)
-end
 end
 
 local function ServerHop()
@@ -3500,6 +3473,53 @@ end
       end
     end
   end)
+  
+AutoSea:AddSection({"Prehistoric Island"})
+local PreLabel = AutoSea:AddParagraph({"Prehistoric Island : Not Spawned"})
+  task.spawn(function()
+    local Map = workspace:WaitForChild("Map", 9e9)
+    task.spawn(function()
+      while task.wait() do
+        if Map:FindFirstChild("PrehistoricIsland") then
+          local plrPP = Player.Character and Player.Character.PrimaryPart
+          if plrPP then
+            Distance = tostring(math.floor((plrPP.Position - Map.PrehistoricIsland.WorldPivot.p).Magnitude / 3))
+          end
+        end
+      end
+    end)
+    
+    while task.wait() do
+      if Map:FindFirstChild("PrehistoricIsland") then
+        PreLabel:SetTitle("Check Prehistoric Island : Spawned✅ | Distance : " .. Distance)
+      else
+        PreLabel:SetTitle("Check Prehistoric Island : Not Spawned❌")
+      end
+    end
+  end)
+  
+AutoSea:AddToggle({
+	Name = "Teleport to Prehistoric Island",
+	Default = false,
+	Callback = function(Value)
+		getgenv().TpPre = Value
+	end
+})
+
+spawn(function()
+pcall(function()
+while wait() do
+if getgenv().TpPre then
+pcall(function()
+if game:GetService("Workspace").Map:FindFirstChild("PrehistoricIsland") then
+PlayerTP(workspace.Map.PrehistoricIsland.WorldPivot)
+end
+ end)
+end
+end
+end)
+end)
+  
   AutoSea:AddSection({"Sea"})
   AutoSea:AddToggle({Name = "Auto Farm Sea",Callback = function(Value)
     getgenv().AutoFarmSea = Value;AutoFarmSea()
@@ -5718,26 +5738,11 @@ elseif Sea2 or Sea3 then
   local Raids = require(ReplicatedStorage.Raids)
   table.foreach(Raids.advancedRaids, function(a, b)table.insert(Raids_Chip, b)end)
   table.foreach(Raids.raids, function(a, b)table.insert(Raids_Chip, b)end)
-local TimeRaid = FruitAndRaid:AddParagraph({"🧭 Waiting For Dungeon"})
 local Island1 = FruitAndRaid:AddParagraph({": lsland 1"})
 local Island2 = FruitAndRaid:AddParagraph({": lsland 2"})
 local Island3 = FruitAndRaid:AddParagraph({": lsland 3"})
 local Island4 = FruitAndRaid:AddParagraph({": lsland 4"})
 local Island5 = FruitAndRaid:AddParagraph({": lsland 5"})
-
-spawn(function()
-        pcall(function()
-            while wait() do
-                if game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Visible == true then
-                if not game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland") then
-                    TimeRaid:SetTitle(game:GetService("Players").LocalPlayer.PlayerGui.Main.Timer.Text)
-                else
-                    TimeRaid:SetTitle("?? Waiting For Dungeon")
-                end
-                end
-            end
-        end)
-    end)
     
 spawn(function()
         pcall(function()
@@ -5814,7 +5819,7 @@ spawn(function()
   })
   
   FruitAndRaid:AddToggle({
-    Name = "Auto Farm Raid",
+    Name = "Auto Farm Raid [Bug]",
     Callback = function(Value)
       getgenv().AutoFarmRaid = Value
       task.spawn(function()
@@ -7691,15 +7696,6 @@ local Tema = Misc:AddDropdown({
 })
 
 Misc:AddSection({"Configs"})
-Misc:AddDropdown({
-	Name = "Select Attack Method",
-	Options = {"Slow", "Normal" , "Fast"},
-	Default = "Slow",
-	Flag = "Naslownfahhth",
-	Callback = function(Value)
-		getgenv().MethodAttack = Value
-	end
-})
 Misc:AddSlider({"Farm Distance", 5, 30, 1, 20, function(Value)
   getgenv().FarmPos = Vector3.new(0, Value or 15, Value or 10)getgenv().FarmDistance = Value
 end, "Misc/FarmDistance"})
@@ -8349,6 +8345,14 @@ task.spawn(function()
   hookfunction(error, function()end)
   hookfunction(warn, function()end)
 end)
+
+task.spawn(function()
+      while wait() do
+      if getgenv().FastAttack then
+        module:attack()
+      end
+      end
+    end)
 
 task.spawn(function()
 	Fluent:Notify({
