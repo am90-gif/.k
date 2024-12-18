@@ -4892,7 +4892,7 @@ end)
 end)
 
 MainFarm:AddToggle({
-	Name = "Spam M1 Dragon-Kitsune",
+	Name = "Auto M1 Dragon-Kitsune",
 	Default = false,
 	Callback = function(Value)
 		getgenv().AutoDragon = Value
@@ -4919,6 +4919,22 @@ local args = {
 }
 
 game:GetService("Players").LocalPlayer.Character:FindFirstChild("Kitsune-Kitsune").LeftClickRemote:FireServer(unpack(args))
+end
+if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dragon-Dragon") then
+local args = {
+    [1] = Vector3.new(-0.7925562262535095, -0, 0.6097988486289978),
+    [2] = 1
+}
+
+game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dragon-Dragon").LeftClickRemote:FireServer(unpack(args))
+end
+if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Kitsune-Kitsune") then
+local args = {
+    [1] = Vector3.new(-0.7925562262535095, -0, 0.6097988486289978),
+    [2] = 1
+}
+
+game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Kitsune-Kitsune").LeftClickRemote:FireServer(unpack(args))
 end
  end)
 end
