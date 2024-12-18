@@ -8347,14 +8347,6 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-      while wait() do
-      if getgenv().FastAttack then
-        module:attack()
-      end
-      end
-    end)
-
-task.spawn(function()
 	Fluent:Notify({
 		Title = "OMG Hub",
 		Content = "OMG Hub Loaded!",
